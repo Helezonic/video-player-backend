@@ -4,8 +4,6 @@ const connectdb = require("./db");
 
 const app = express();
 
-console.log(process.env.PORT)
-
 app.get("/", (req, res) => {
   res.send(`
     <div style="height: 100%; width: 100%; border: 1px solid blue; display:flex ; flex-direction: column;  margin:0 ; padding: 0; background-color:crimson">
@@ -28,4 +26,5 @@ app.get("/about", (req,res) => {
     `)
 })
 
+//Connect the DATABASE
 connectdb();
