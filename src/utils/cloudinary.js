@@ -1,7 +1,7 @@
 const { v2 } = require("cloudinary");
 const fs = require("fs")
 
-cloudinary.config({ 
+v2.config({ 
   cloud_name: process.env.CLOUDINARY_URI, 
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET 
@@ -15,7 +15,7 @@ const uploadToCloudinary = async (localFilePath) => {
       resource_type : "auto"
     })
 
-    fs.unlinkSync(localFilePath) //Delete localFile even if cloud upload is success or fail
+    /* fs.unlinkSync(localFilePath) */ //Delete localFile even if cloud upload is success or fail
 
     if (uploadResult){
       console.log("file has been uploaded successfully")

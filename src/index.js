@@ -1,8 +1,17 @@
 require ("dotenv").config();
-const express = require("express");
-const connectdb = require("./db");
+const {connectdb} = require("./db");
+const app = require("./app.js")
 
-const app = express();
+console.log("1 Start of Index")
+
+//Connect the DATABASE
+connectdb().then(()=>{
+  //After connection attempt, listen on port.
+  app.listen(process.env.PORT, () => {
+    console.log(`App listening on Port ${process.env.PORT}!`)
+    
+  })
+});
 
 app.get("/", (req, res) => {
   res.send(`
@@ -21,10 +30,10 @@ app.get("/about", (req,res) => {
       <div style="border: 1px solid red; width: 250px; margin:auto ; padding:20px ; background-color:white">
         <h1>ABOUT. </h1>
         <a href="/"><h2><-- Go home</h2></a>
+        <a href="/api/user/register"><h2>REGISTER</h2></a>
       <div>
     </div>
     `)
 })
 
-//Connect the DATABASE
-connectdb();
+console.log("2 End of Index")

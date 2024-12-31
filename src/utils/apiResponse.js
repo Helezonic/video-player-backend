@@ -10,3 +10,5 @@ class ApiResponse {
     this.success = statusCode < 400 //As status code above 400 in general is server aka backend issue, hence comes under apiError
   }
 }
+
+module.exports = ApiResponse

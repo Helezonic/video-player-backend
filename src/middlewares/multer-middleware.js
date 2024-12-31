@@ -1,13 +1,16 @@
 const multer = require("multer")
 
-//Store the file to localPath
+console.log("Start Multer Middleware")
+
+//Store the file to localStorage, and a filename can be given.
 const fileStorage = multer.diskStorage({
   destination : function (req,file,cb) {
     cb(null,'../../public/temp')
   },
   filename : function (req, file, cb) {
-    cb(null,file.fieldname)
+    cb(null,file.originalname)
   }
 })
 
-module.exports = fileStorage;
+console.log("End Multer Middleware")
+exports.upload = multer({fileStorage})
