@@ -4,20 +4,18 @@ const { upload } = require("../middlewares/multer-middleware.js")
 
 console.log("5 Start of Router")
 
-
-
 const router = Router()
 
-router.route("/register").post(/* upload.fields([
+router.route("/register").post(upload.fields([
   {
-    name : avatar,
+    name : "avatar",
     maxCount : 1
   },
   {
-    name : coverImage,
+    name : "coverImage",
     maxCount : 1
   }
-]), */registerUser)
+]),registerUser)
 
 module.exports = router
 

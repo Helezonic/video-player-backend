@@ -1,8 +1,8 @@
 
 const mongoose = require ("mongoose")
-const {dbName} = require ("../constants.js");
+const dbName = require ("../constants.js");
 
-console.log("Start of DB")
+console.log("Start of DB", dbName)
 
 const connectdb = async () => {
   try {
@@ -10,7 +10,6 @@ const connectdb = async () => {
     if(connect){
       console.log("MONGODB Connection Successful!", connect.connection.host)
     }
-    /* app.on("error", (error)=>{"Error Communicating to MongoDB.", error}) */
 
   } catch (error) {
     console.log("MongoDB connection failed!", error)
