@@ -8,7 +8,7 @@ console.log("Start of User Controller")
 const registerUser = asyncHandler(
   async (req,res) => {
     console.log("Request Body\n", req.body)
-    
+
     //Order of destructuring doesn't matter, only the spelling matters
     const {email, fullName, userName, password} = req.body //avatar and coverImage is received in req.files
     console.log("Destructured", "\nfullName : ", fullName, "\nemail: ", email, "\nuserName: ", userName, "\npassword: ", password)
@@ -82,5 +82,28 @@ const registerUser = asyncHandler(
     )
   }
 )
+
+const logIn = "";
+
+const logOut = "";
+
+//When access Token expires
+const accessRefreshToken = ""
+
+const changeCurrentPassword = ""
+
+const getCurrentUser = ""
+
+const updateUserDetails = ""
+
+const updateAvatar = ""
+
+//Mongo aggregate
+const getUserChannelProfile = ""
+
+//Mongo subpipeline
+const getWatchHistory = ""
+
+
 console.log("End of User Controller")
 module.exports = registerUser 
