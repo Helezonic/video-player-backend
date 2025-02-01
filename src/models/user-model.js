@@ -4,49 +4,47 @@ const { Schema, default: mongoose } = require("mongoose");
 const bcrypt = require ("bcrypt")
 
 const userSchema = new Schema({
-  userName : {
-    type : String,
-    required : true,
-    unique : true,
-    lowercase : true,
-    trim : true,
-    index : true
-  },
-  email : {
-    type : String,
-    required : true,
-    unique : true,
-    lowercase : true,
-    trim : true
-  },
-  fullName : {
-    type : String,
-    required : true,
-    unique : true,
-    index : true
-  }, 
-  avatar : {
-    type : String, //Image URL
-    required : true
-  },
-  coverImage : {
-    type : String //Image URL
-  },
-  watchHistory : [
-    {
-      type : Schema.Types.ObjectId,
-      ref : "Video"  
+    userName : {
+      type : String,
+      required : true,
+      unique : true,
+      lowercase : true,
+      trim : true,
+      index : true
+    },
+    email : {
+      type : String,
+      required : true,
+      unique : true,
+      lowercase : true,
+      trim : true
+    },
+    fullName : {
+      type : String,
+      required : true,
+      index : true
+    }, 
+    avatar : {
+      type : String, //Image URL
+      required : true
+    },
+    coverImage : {
+      type : String //Image URL
+    },
+    watchHistory : [
+      {
+        type : Schema.Types.ObjectId,
+        ref : "Video"  
+      }
+    ],
+    password : {
+      type : String,
+      required : [true, "Password is required"]
+    },
+    refreshToken : {
+      type : String
     }
-  ],
-  password : {
-    type : String,
-    required : [true, "Password is required"]
-  },
-  refreshToken : {
-    type : String
-  }
-},
-{
+  },{
   timestamps : true
 })
 
@@ -57,6 +55,8 @@ userSchema.pre("save", async function (next){
   return next()
 })
 
+
+//USER DEFINED INSTANT METHODS
 //Password validation - Compares hashed passwords - Check Notion notes
 userSchema.methods.isPasswordCorrect = async function(password) {
   return await bcrypt.compare(password, this.password)
@@ -92,3 +92,4 @@ userSchema.methods.generateRefreshToken = async function() {
 }
 
 exports.User = mongoose.model("User", userSchema)
+

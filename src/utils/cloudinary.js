@@ -8,7 +8,7 @@ cloudinary.config({
 });
 
 
-const uploadToCloudinary = async (localFilePath) => {
+const uploadToCloudinary = async (localFilePath, text) => {
   try {
     if(!localFilePath) return null;
     console.log("File path received in cloudinary: ",localFilePath)
@@ -18,7 +18,7 @@ const uploadToCloudinary = async (localFilePath) => {
     })
 
     if (uploadResult){
-      console.log("Upload to cloudinary successfull!")
+      console.log(`${text} Upload to cloudinary successfull!`)
       return uploadResult.url
     }
     

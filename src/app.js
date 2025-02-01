@@ -7,7 +7,7 @@ const ApiError = require("./utils/apiError.js");
 app = express();
 console.log("3 Start of App")
 
-
+//---------------------------------------------------------------
 //DEFAULT MIDDLEWARES
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
@@ -21,14 +21,18 @@ app.use(express.urlencoded({extended: true, limit: "16kb"}));
 
 app.use(express.static('public'));
 
-app.use(cookieParser());
+app.use(cookieParser()); // To access cookies both from request and store as response
 
-
+//---------------------------------------------------------------
 //Import router
 const router = require("./routes/user-router.js");
 
+//API ENDPOINT AS MIDDLEWARE
 app.use("/api/user",router)
 
+
+
+//---------------------------------------------------------------
 // Error handling middleware caught and send from AsyncHandler
 app.use((err, req, res, next) => {
   if (err instanceof ApiError) {

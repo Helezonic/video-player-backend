@@ -5,8 +5,9 @@
 const asyncHandler = (fn) => {
   return async (req, res, next) => {
     try {
-      await fn(req,res,next)
       console.log("Inside asyncHandler")
+      await fn(req,res,next)
+      console.log("Finished asyncHandler")
     } catch (error) {
       console.log("Error in asyncHandler", error);
       next(error)
