@@ -1,8 +1,9 @@
 const asyncHandler = require("../utils/asyncHandler.js");
 const ApiError = require("../utils/apiError.js")
 const { User } = require("../models/user-model.js");
-const uploadToCloudinary = require("../utils/cloudinary.js");
+const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinary.js");
 const ApiResponse = require("../utils/apiResponse.js");
+const jwt  = require("jsonwebtoken");
 
 console.log("Start of User Controller")
 
@@ -86,19 +87,18 @@ const registerUser = asyncHandler(
 )
 
 
-const getCurrentUser = ""
-
-//LOGIN PAGE-------------------
+//LOGIN PAGE---------| ALL ERROR CASES CHECKED THROUGH POSTMAN
 //Generate access token, refresh token and store in cookies
 const logIn = asyncHandler(
   async (req,res) => {
+    console.log("--------------LOGIN------------")
     const {email, userName, password} = req.body
     console.log("Log In User\n", req.body)
     if(!req.body)
       throw new ApiError(400, "Request Body nothing recieved")
 
     //check whether fields are empty
-    if( !email || !userName || !password)
+    if( !(email && userName && password))
       throw new ApiError(400, "Empty Fields")
     console.log("Destructured", "\nemail: ", email, "\nuserName: ", userName, "\npassword: ", password)
 
@@ -110,6 +110,7 @@ const logIn = asyncHandler(
       }
     )
     console.log("searchDB", searchDB)
+
     if(!searchDB){
       throw new ApiError(400, "User doesn't exist")
     } 
@@ -147,9 +148,10 @@ const logIn = asyncHandler(
 );
 
 
-//LOGOUT BUTTON--------------------
+//LOGOUT BUTTON----------------| ALL ERROR CASES CHECKED THROUGH POSTMAN
 const logOut = asyncHandler(
   async (req,res) => {
+    console.log("--------------LOGOUT------------")
     //userId of user through middleware
     const userId = req.userId
     console.log(userId)
@@ -157,12 +159,12 @@ const logOut = asyncHandler(
     //delete refreshToken from db, returns old document from DB by default
     const loggedOutDB = await User.findByIdAndUpdate(userId, 
       {
-        $set: {refreshToken: undefined}
+        $set: {refreshToken: ""}
       }, 
       {
         new : true //returning doc is updated one
       }
-    )
+    ).select("-password")
 
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
@@ -178,16 +180,215 @@ const logOut = asyncHandler(
 );
 
 //When Access Token expires, regenerate with Refresh Token
-const accessRefreshToken = ""
+const regenerateAccessToken = asyncHandler(
+  async (req,res) => {
 
-//UPDATE USER SETTINGS - PASSWORD
-const changeCurrentPassword = ""
+    console.log("--------------ACCESSTOKEN REGEN------------")
+    //Collect refreshToken from cookies
+    const refreshToken = req.cookies?.refreshToken
 
-//UPDATE USER SETTINGS
-const updateUserDetails = ""
+    if(!refreshToken)
+      throw new ApiError(401, "No refreshToken, session is expired")
 
-//UPDATE USER SETTINGS - IMAGE
-const updateAvatar = ""
+    try {
+      //Decode it, get id, search by ID, check match
+      const decodedToken = await jwt.verify(refreshToken,process.env.REFRESH_TOKEN_KEY)
+      if(!decodedToken)
+        throw new ApiError(401,"Token decoding error, check refresh Token")
+  
+      const searchDB = await User.findById(decodedToken?._id)
+      if(!searchDB)
+        throw new ApiError(401, "User not found in DB")
+  
+  
+      if(searchDB.refreshToken!==refreshToken)
+        throw new ApiError(401, "Unauthorised access")
+  
+      //Generate new access token and send response
+      const accessToken = await searchDB.generateAccessToken()
+  
+  
+      //Or should you regenerate both access and refresh token?
+      res.status(200)
+      .cookie("accessToken", accessToken, options)
+      .json(new ApiResponse(200, {}, "Access Token Regenerated"))
+    } catch (error) {
+      throw new ApiError(401, "Token decoding error")
+    }
+  }
+)
+
+//Respond with Current User Details | ALL ERROR CASES CHECKED THROUGH POSTMAN
+const getCurrentUser = asyncHandler(
+  async (req, res) => {
+    console.log("---------GET USER----------")
+    const user = await User.findById(req.userId).select("-password -refreshToken")
+    
+    if(!user)
+      throw new ApiError(400, "User not found")
+    console.log("User found")
+
+    res.status(200)
+    .json(new ApiResponse(200, {user}, "User found"))
+  }
+)
+
+//UPDATE USER SETTINGS - PASSWORD | ALL ERROR CASES CHECKED THROUGH POSTMAN
+const changeCurrentPassword = asyncHandler(
+  async (req, res) => {
+    console.log("-------------PASS UPDATE------------")
+    const {oldPassword, newPassword} = req.body
+
+    //Are fields empty?
+    if(!(oldPassword && newPassword))
+      throw new ApiError(400, "Fields are empty")
+
+
+    //Are fields same?
+    if(oldPassword === newPassword)
+      throw new ApiError(400, "New Password same as Old Password")
+
+    //Get user id from access token - middleware
+    const userId = req.userId
+
+    //should redirect to generating new access Id
+    if(!userId)
+      throw new ApiError(400,"Access id unavailable") //THIS ERROR WONT BE SHOWN AS THIS WILL BE CAUGHT BY MIDDLEWARE
+    
+    //Search for user on db
+    const searchDb = await User.findById(userId)
+    if(!searchDb)
+      throw new ApiError(400, "User doesn't exist") //THIS ERROR WONT BE SHOWN AS THIS WILL BE CAUGHT BY MIDDLEWARE
+
+    //verify older password
+    const passCheck = await searchDb.isPasswordCorrect(oldPassword)
+    if(!passCheck){
+      throw new ApiError(400, "Password error")
+    }
+    console.log("Password Correct")
+
+    //update newer password and save
+    searchDb.password = newPassword
+    const newPassSave = await searchDb.save({validateBeforeSave: false}) //initiates pre hook for password field
+
+    console.log("Password Updated", newPassSave)
+
+    
+    res.status(200)
+    .json(new ApiResponse(200, {}, "Password Successfully Updated"))
+  }
+)
+
+//UPDATE USER SETTINGS | ALL ERROR CASES CHECKED THROUGH POSTMAN
+const updateUserDetails = asyncHandler(
+  async (req,res) => {
+    console.log("-------------USER UPDATE------------")
+    console.log("Update User Details")
+    const {fullName} = req.body
+    console.log("fullName - ", fullName)
+
+    if(!fullName)
+      throw new ApiError(400, "Field Blank")
+
+    //Find in DB and update
+    const updatedUser = await User.findByIdAndUpdate(req.userId,
+      {
+        $set: {fullName: fullName}
+      },
+      {
+        new: true
+      }
+    ).select("-password -refreshToken")
+    
+    if(!updatedUser)
+      throw new ApiError(400, "Update Error")
+
+    res.status(200)
+    .json(new ApiResponse(200,{updatedUser},"Successful Update"))
+  }
+)
+
+//UPDATE USER SETTINGS - IMAGE | ALL ERROR CASES CHECKED THROUGH POSTMAN
+const updateImages = asyncHandler(
+  async (req,res) => {
+    console.log("-------------IMAGE UPDATE------------")
+
+
+    //After verifying user with JWT, get file URLs for default value
+    const user = await User.findById(req.userId)
+
+    console.log("Existing avatar URL" , user.avatar)
+    console.log("Existing cover Image URL", user.coverImage)
+    let avatarUploaded = user.avatar
+    let coverImageUploaded = user.coverImage
+
+    //After uploading through multer middleware
+    console.log("Req Files - ",req.files)
+    
+    // If only avatar is updated and no coverImage
+    if(req.files?.avatar){
+      const avatarPath = req.files?.avatar[0]?.path
+
+      const avatarUpdated = await uploadToCloudinary(avatarPath, "Avatar")
+      console.log("avatarURL", avatarUpdated)
+
+      if(
+        !(avatarUpdated)
+      ) { throw new ApiError(400, "Avatar Upload Error, please upload avatar again")}
+
+      //Delete older file - Get public ID from URL by spliting the last part
+      const parts = avatarUploaded.split('/')
+      const lastPart = parts[parts.length - 1].split('.')
+      const imagePublicId = lastPart[0]
+      await deleteFromCloudinary(imagePublicId)
+      
+      avatarUploaded = avatarUpdated;
+    } 
+
+
+    // If only coverImage is updated and no avatar
+    if(req.files?.coverImage) {
+      const coverImagePath = req.files?.coverImage[0]?.path
+
+      const coverImageUpdated = await uploadToCloudinary(coverImagePath, "Cover Image")
+      console.log("coverImageURL", coverImageUpdated)
+
+      if(
+        !(coverImageUpdated)
+      ) { throw new ApiError(407, "Cover Image Upload Error, please upload avatar again")}
+
+      //Delete older file - Get public ID from URL by spliting the last part
+      const parts = coverImageUploaded.split('/')
+      const lastPart = parts[parts.length - 1].split('.')
+      const imagePublicId = lastPart[0]
+      await deleteFromCloudinary(imagePublicId)
+
+      coverImageUploaded = coverImageUpdated
+    } 
+    
+
+    //Find and update URL in the DB
+    const updatedUser = await User.findByIdAndUpdate(req.userId,
+      {
+        $set: {
+          avatar : avatarUploaded,
+          coverImage : coverImageUploaded
+        }
+      },
+      {
+        new: true
+      }
+    ).select("-password -refreshToken")
+    
+    if(!updatedUser)
+      throw new ApiError(400, "Update Error")
+
+    console.log("Data updated")
+
+    res.status(200)
+    .json(new ApiResponse(200, {updatedUser}, "Images Successfully Updated"))
+  }
+)
 
 //Mongo aggregate
 const getUserChannelProfile = ""
@@ -197,4 +398,13 @@ const getWatchHistory = ""
 
 
 console.log("End of User Controller")
-module.exports = {registerUser, logIn, logOut} 
+module.exports = {
+  registerUser,
+  logIn,
+  logOut,
+  regenerateAccessToken,
+  changeCurrentPassword,
+  updateUserDetails,
+  getCurrentUser,
+  updateImages
+} 

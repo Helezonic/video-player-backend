@@ -18,7 +18,7 @@ const uploadToCloudinary = async (localFilePath, text) => {
     })
 
     if (uploadResult){
-      console.log(`${text} Upload to cloudinary successfull!`)
+      console.log(`${text} Upload to cloudinary successfull! \n`)
       return uploadResult.url
     }
     
@@ -31,4 +31,14 @@ const uploadToCloudinary = async (localFilePath, text) => {
   }
 }
 
-module.exports= uploadToCloudinary
+const deleteFromCloudinary = async (imagePublicId) => {
+  try {
+    await cloudinary.uploader.destroy(imagePublicId)
+    console.log("Previous Image deleted", imagePublicId)
+  } catch (error) {
+    console.log("Delete from cloudinary error")
+    return null
+  }
+}
+
+module.exports= { uploadToCloudinary, deleteFromCloudinary }

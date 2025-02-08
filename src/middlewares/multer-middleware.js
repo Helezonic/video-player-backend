@@ -14,4 +14,7 @@ const fileStorage = multer.diskStorage({
 })
 
 console.log("End Multer Middleware")
-exports.upload = multer({storage: fileStorage})
+
+exports.upload = multer({
+  storage: fileStorage
+})
