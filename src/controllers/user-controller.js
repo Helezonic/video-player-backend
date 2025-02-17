@@ -4,6 +4,7 @@ const { User } = require("../models/user-model.js");
 const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinary.js");
 const ApiResponse = require("../utils/apiResponse.js");
 const jwt  = require("jsonwebtoken");
+const { default: mongoose } = require("mongoose");
 
 console.log("Start of User Controller")
 
@@ -391,10 +392,133 @@ const updateImages = asyncHandler(
 )
 
 //Mongo aggregate
-const getUserChannelProfile = ""
+//To get other user's channel details with subscriptions, 
+const getUserChannelProfile = asyncHandler (
+  async (req,res) => {
+    const userId = req.userId
+    const id = req.params?.id
+    if(!id){
+      throw new ApiError(404,"No id")
+    }
+    console.log("Logged in User", userId)
+    console.log("Current User Id", id)
+
+    const aggregate = await User.aggregate([
+      {
+        $match : {
+          _id : new mongoose.Types.ObjectId(userId)
+        }
+      },
+      //Get list of documents of users who has subscribed to you(logged in channel)
+      {
+        $lookup: {
+          from : "subscriptions",
+          localField : "_id",
+          foreignField : "channel",
+          as : "subscribers"
+        }
+      },
+      //Get list of documents of users who you have subscribed to.
+      {
+        $lookup: {
+          from : "subscriptions",
+          localField : "_id",
+          foreignField : "subscriber",
+          as : "subscribedTo"
+        }
+      },
+      {
+        $addFields : {
+          //Count number of subscribers
+          subscriberCount : {
+            $size : "subscribers"
+          },
+          //Count number of channels you have subscribed to
+          channelsSubscribedToCount : {
+            $size : "subscribedTo"
+          },
+          //Is the logged in channel subscribed to the current channel?
+          isSubscribed : {
+            $cond : {
+              //From the list of subscribers added above, is there your channel id on subscriber field?
+              if : {$in: [userId, "$subscribers.subscriber"]},
+              then : true,
+              else : false
+            }
+          }
+        }
+      },
+      {
+        //What all to project and return
+        $project : {
+          fullName : 1,
+          userName : 1,
+          email : 1,
+          avatar : 1,
+          coverImage : 1,
+          subscriberCount : 1,
+          channelsSubscribedToCount : 1,
+          isSubscribed : 1
+        }
+      }
+    ])
+
+    if(!aggregate?.length) {
+      throw new ApiError (400,"Channel doesn't exist")
+    }
+
+    res.status(200)
+    .json(new ApiResponse(200, {aggregate}, "Channel Information fetched"))
+  }
+)
 
 //Mongo subpipeline
-const getWatchHistory = ""
+//To get watch History of a logged in User.
+const getWatchHistory = asyncHandler(
+  async(req, res) => {
+    const userId = req?.userId
+
+    const history = await User.aggregate([
+      {
+        //Match the logged in userId with the document
+        $match : {
+          _id : new mongoose.Types.ObjectId(userId)
+        }
+      }, 
+      {
+        //Populate with the video details matching with the video Ids in watchHistory to ids in video
+        $lookup : {
+          from : "videos",
+          localField : "watchHistory",
+          foreignField : "_id",
+          as : "watchHistory",
+          pipeline : [
+            {
+              //Populate with video owner details of each video
+              $lookup : {
+                from : "users",
+                localField : "owner",
+                foreignField : "_id",
+                as: "owner",
+                pipeline : [
+                  {
+                    $project : {
+                      fullName : 1,
+                      userName : 1,
+                      avatar : 1
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ])
+    
+    res.status(200)
+    .json(new ApiResponse(200, {history}, "Watch History fetched successfully"))
+})
 
 
 console.log("End of User Controller")
@@ -406,5 +530,7 @@ module.exports = {
   changeCurrentPassword,
   updateUserDetails,
   getCurrentUser,
-  updateImages
+  updateImages,
+  getUserChannelProfile,
+  getWatchHistory
 } 

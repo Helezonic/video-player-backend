@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {registerUser, logIn, logOut, regenerateAccessToken, changeCurrentPassword, updateUserDetails, getCurrentUser, updateImages} = require("../controllers/user-controller.js");
+const {registerUser, logIn, logOut, regenerateAccessToken, changeCurrentPassword, updateUserDetails, getCurrentUser, updateImages, getUserChannelProfile, getWatchHistory} = require("../controllers/user-controller.js");
 const { upload } = require("../middlewares/multer-middleware.js");
 const { verifyJWT } = require("../middlewares/auth-middleware.js");
 
@@ -8,7 +8,7 @@ console.log("5 Start of Router")
 const router = Router()
 
 //API ENDPOINTS - route("url").httpmethod(middleware, controller)
-//register endpoint
+//register endpoint - FORM BASED
 router.route("/register").post(upload.fields([
   {
     name : "avatar",
@@ -20,23 +20,23 @@ router.route("/register").post(upload.fields([
   }
 ]),registerUser) //Test Passed
 
-//login endpoint
+//login endpoint - FORM BASED
 router.route("/login").post(logIn) //Test Passed
 
 //SECURED ROUTES -- Only logged in user can hit the endpoint
-//logout endpoint
+//logout endpoint - LOG OUT BUTTON, REDIRECT TO HOME IF SUCCESS
 router.route("/logout").post(verifyJWT,logOut) //Test Passed
 
 //get current user endpoint
-router.route("/get-user").post(verifyJWT, getCurrentUser)
+router.route("/get-user").post(verifyJWT, getCurrentUser) //Test Passed
 
-//regenerate accesstoken
+//regenerate accesstoken - REDIRECTION
 router.route("/regen-access").post(regenerateAccessToken)
 
-//update user-pass endpoint
+//update user-pass endpoint - FORM BASED, REDIRECT TO CHANNEL PAGE LOGGED IN
 router.route("/update-pass").post(verifyJWT,changeCurrentPassword) //Test Passed
 
-//update user-image endpoint
+//update user-image endpoint - FORM BASED, REDIRECT TO CHANNEL PAGE LOGGED IN
 router.route("/update-img").post(verifyJWT, upload.fields([
   {
     name : "avatar",
@@ -46,11 +46,16 @@ router.route("/update-img").post(verifyJWT, upload.fields([
     name : "coverImage",
     maxCount : 1
   }
-]), updateImages)
+]), updateImages) //Test Passed
 
-//update user-details endpoint
+//update user-details endpoint - FORM BASED, REDIRECT TO CHANNEL PAGE LOGGED IN
 router.route("/update-details").post(verifyJWT,updateUserDetails) //Test Passed
 
+//getChannelDetails - CHANNEL BUTTON, OPEN CHANNEL PAGE
+router.route("/:id").get(verifyJWT,getUserChannelProfile)
+
+//getWatchHistory - WATCH HISTORY BUTTON, HISTORY PAGE
+router.route("/history").get(verifyJWT, getWatchHistory)
 
 module.exports = router
 
