@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "3378fbb6-6312-4369-9969-a7827fde8f85",
+		"name": "Video Backend",
+		"description": "This is an Internal API Documentation made for a Video Player server based on the OpenAPI 3.0 specification.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36432868",
+		"_collection_link": "https://random-team-7547.postman.co/workspace/Random-Team-Workspace~377b6897-b6b0-4edc-83a7-1e2795962f5c/collection/36432868-3378fbb6-6312-4369-9969-a7827fde8f85?action=share&source=collection_link&creator=36432868"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fullName",
+							"value": "rohit sharma1",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "rohitsharma@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "userName",
+							"value": "rohitsharma001",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "cricket251",
+							"type": "text"
+						},
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "/C:/Users/ahame/Downloads/india 123.png"
+						},
+						{
+							"key": "coverImage",
+							"type": "file",
+							"src": "/C:/Users/ahame/Downloads/indiaapps2024.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"register"
+					]
+				},
+				"description": "### Register User\n\nThis endpoint is used to register a new user.\n\n#### Request Body\n\n- `fullName` (text): The full name of the user.\n    \n- `email` (text): The email address of the user.\n    \n- `userName` (text): The username chosen by the user.\n    \n- `password` (text): The password for the user account.\n    \n- `avatar` (file): The avatar image for the user.\n    \n- `coverImage` (file): The cover image for the user profile.\n    \n\n#### Response\n\nThe response of this request is a JSON schema representing the user registration details.\n\nThis endpoint allows you to register a new user."
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\": \"abcd\",\r\n    \"email\": \"abcd@gmail.com\",\r\n    \"password\": \"password12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				},
+				"description": "### User Login\n\nThis endpoint allows users to log in by providing their username, email, and password.\n\n#### Request Body\n\n- `userName` (string) - The username of the user.\n    \n- `email` (string) - The email address of the user.\n    \n- `password` (string) - The password for the user's account.\n    \n\n#### Response\n\nThe response will include the user's authentication token and other relevant user information upon successful login."
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/user/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"logout"
+					]
+				},
+				"description": "The `POST` request to `/api/user/logout` endpoint is used to log out the user from the application. Upon successful execution, the response will be in the form of a JSON schema.\n\nThe response will contain the schema for the data returned upon successful user logout. The schema will outline the structure of the JSON response, including the type and format of each key-value pair."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Details",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fullName\" : \"ABCD new name\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/user/update-details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"update-details"
+					]
+				},
+				"description": "### Update User Details\n\nThis endpoint is used to update user details.\n\n#### Request Body\n\n- fullName (string, required): The new full name of the user.\n    \n\n#### Response\n\nThe response will include the updated user details."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Pass",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"oldPassword\" : \"password123\",\r\n    \"newPassword\"  : \"password12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/user/update-pass",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"update-pass"
+					]
+				},
+				"description": "\n### Update User Password\n\nThis endpoint is used to update the password for a user.\n\n#### Request Body\n- oldPassword (string, required): The current password of the user.\n- newPassword (string, required): The new password for the user.\n\n#### Response\nThe response for this request is a JSON object with the following schema:\n```json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status\": {\n      \"type\": \"string\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n```\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Image",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "/C:/Users/intel/Downloads/pics/poster1_0000-001_30.jpg"
+						},
+						{
+							"key": "coverImage",
+							"type": "file",
+							"src": "/C:/Users/intel/Downloads/2024 Molly/aadujeevitham.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/user/update-img",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"update-img"
+					]
+				},
+				"description": "The `POST` request updates the user's profile images by sending a request to the specified endpoint `http://localhost:4000/api/user/update-img`. The request body should be of type `form-data` and include the following parameters:\n\n1. `avatar` (type: file) - The user's avatar image file.\n    \n2. `coverImage` (type: file) - The user's cover image file.\n    \n\nAdditionally, the request should include the necessary headers and authorization details for successful execution."
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/user/get-user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"get-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Full Profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/user/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						":id"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				},
+				"description": "# Retrieve User Details\n\nThis endpoint retrieves the details of a specific user identified by their unique ID, with Subscribers count and Subscribed To count.\n\n## Request\n\n### Request Parameters\n\n- `id` (path parameter) : The unique identifier of the user.\n    \n\n### Request Body\n\nThis request does not require a request body.\n\n## Response\n\nThe response for this request is a JSON object containing the details of the user. The schema for the response can be described as follows:"
+			},
+			"response": []
+		},
+		{
+			"name": "Generate AccessToken",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/user/regen-access",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"regen-access"
+					]
+				},
+				"description": "This endpoint is used to regenerate the access token for a user.\n\n### Request\n\nThere are no request parameters for this endpoint.\n\n### Response\n\nThe response will have a status code of 200 and the content type will be text/xml. The response body will contain the regenerated access token."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Watch History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/api/user/history",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"user",
+						"history"
+					]
+				},
+				"description": "This endpoint retrieves the watch history of user activity. The response of this request is a JSON schema representing the structure of the data returned by the API."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

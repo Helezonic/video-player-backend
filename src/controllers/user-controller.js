@@ -21,7 +21,7 @@ const registerUser = asyncHandler(
     //To not throw error while submitting form to database, do the validation here, as the database details are based on mongoose model.
       //Is it empty? Any order of array is fine.
       if(
-        [fullName, email, userName, password].some((field)=> field?.trim() === "") //some method is for Array, and array is created here without any declaration step
+        [fullName, email, userName, password].some((field)=> !field) //some method is for Array, and array is created here without any declaration step
       ) { throw new ApiError(400,"Empty fields") }
 
 
@@ -77,7 +77,7 @@ const registerUser = asyncHandler(
       
 
     //Get uploaded file details, remove password and Refresh Token, to be send as response.
-    const fileDetailsRefined = await User.findById(fileUploaded._id).select("-password -refreshToken") 
+    const fileDetailsRefined = await User.findById(fileUploaded._id).select("-password -refreshToken -watchHistory -__v") 
 
 
     //Finish the HTTP request by responding
@@ -208,7 +208,11 @@ const regenerateAccessToken = asyncHandler(
       //Generate new access token and send response
       const accessToken = await searchDB.generateAccessToken()
   
-  
+      const options = { //so that client can't edit or change the tokens
+        httpOnly : true,
+        secure : true 
+      }
+
       //Or should you regenerate both access and refresh token?
       res.status(200)
       .cookie("accessToken", accessToken, options)

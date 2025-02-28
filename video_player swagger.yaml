@@ -1,0 +1,516 @@
+openapi: 3.0.3
+info:
+  title: Video Player
+  description: >-
+    This is an Internal API Documentation made for a Video Player server based on the OpenAPI 3.0 specification. Cannot be used by public and is restriced
+    
+    Go to the frontend of this application
+    [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml).
+    
+    The backend stack used is NodeJs, ExpressJs, and MongoDB for database.
+    For image uploading, a third party cloud service - Cloudinary is been used.
+    The user authentication is done using the JWT method.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: helezon.dev@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+
+servers:
+  - url: https://petstore3.swagger.io/api/v1
+  
+tags:
+  - name: users
+    description: Everything about USERS
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: video
+    description: Access to videos
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Register a new user
+      description: Register a new user through form with images
+      operationId: userRegister
+      requestBody:
+        description: Upload the file in cloudinary and user data in MongoDB
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterForm'
+          multipart/formdata:
+            schema:
+              $ref: '#/components/schemas/RegisterForm'
+        required: true
+      responses:
+        '201':
+          description: Successful Registration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Blank Field
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          
+        '401':
+          description: Username/Email Exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '402':
+          description: Image File upload to backend error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '403':
+          description: Image File upload to server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: User creation in database failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Login a user
+      description: Login user using JWT signing, generating accessToken and refreshToken
+      operationId: userLogin
+      requestBody:
+        description: Username, password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+          
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Empty Fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: User doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '402':
+          description: Password Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Logs out the user
+      description: >-
+        SECURED ROUTE. Verifies accessToken. Deletes the accessToken & refreshToken from
+        cookie, sets refreshToken to empty from the database
+      operationId: logoutUser
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /users/regen-access:
+    get:
+      tags:
+        - users
+      summary: Regenerate accessToken when it gets expired
+      description: Usually redirected if jwt verify returns 'expired'
+      operationId: updatePetWithForm
+      responses:
+        '400':
+          description: Invalid input
+  /users/update-img:
+    post:
+      tags:
+        - users
+      summary: Updates Cover Image and Avatar Image
+      description: >-
+        SECURED ROUTE. Verifies accessToken. New images are uploaded. Old images
+        are deleted.
+      operationId: uploadFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdImgForm'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /users/update-pass:
+    post:
+      tags:
+        - users
+      summary: Updates the password of the user account
+      description: >-
+        SECURED ROUTE. Verifies accessToken. Old password is compared, New
+        password is updated
+      operationId: getInventory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdPassForm'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+  /users/update-details:
+    post:
+      tags:
+        - users
+      summary: Update Full name. Username and Email not alterable.
+      description: >-
+        SECURED ROUTE. Verifies accessToken. Old password is compared, New
+        password is updated
+      operationId: placeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdDetailsForm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdDetailsForm'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+  /users/{userid}:
+    get:
+      tags:
+        - users
+      summary: Get full User channel Profile
+      description: When logged it, redirect to Home page with User Profile
+      operationId: getOrderById
+      parameters:
+        - name: userid
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Order not found
+  /users/history:
+    get:
+      tags:
+        - users
+      summary: Watch History of User
+      description: Get Watch history of the logged in User
+      operationId: createUser
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+  
+    User:
+      required:
+        - username
+        - email
+        - fullName
+        - avatar
+        - password
+      type: object
+      properties:
+        _id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+        fullName:
+          type: string
+          example: James
+        avatar:
+          type: string
+          example: 'www.cloudinary.com/images/user/81298nuasd'
+        coverImage:
+          type: string
+          example: 'www.cloudinary.com/images/user/123skm98us'
+        watchHistory:
+          type: string
+          example: 123115
+        refreshToken:
+          type: string
+          example: '123120959801209510293091kjasd9012380'
+        password:
+          type: string
+          format: password
+          example: 1j8dnska3of
+        createdAt:
+          type: string
+          format: date
+          example: 2025-01-31T11:29:27.130Z
+        updatedAt:
+          type: string
+          format: date
+          example: 2025-01-31T11:29:27.130Z
+    Video:
+      required:
+        - videoFile
+        - thumbnail
+        - title
+        - description
+      type: object
+      properties:
+        _id:
+          type: integer
+          format: int64
+          example: 928441294ckms2
+        owner:
+          $ref: '#/components/schemas/User'
+        videoFile:
+          type: string
+          description: URL
+          example: 'www.cloudinary.com/files/user/672j123'
+        thumbnail:
+          type: string
+          description: URL
+          example: 'www.cloudinary.com/files/user/xcd9103'
+        title:
+          type: string
+          example: "Watch this and get this"
+        description:
+          type: string
+          example: "This is a sample description that is made for the video"
+        duration:
+          type: integer
+          format: int64
+          description: Time in seconds
+          example: 542
+        views:
+          type: integer
+          format: int64
+          example: 215488
+        isPublished:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date
+          example: 2025-01-31T11:29:27.130Z
+        updatedAt:
+          type: string
+          format: date
+          example: 2025-01-31T11:29:27.130Z
+    Subscription:
+     type: object
+     properties:
+      _id:
+        type: string
+        example: mcxokacs8
+      subscriber : 
+        $ref: '#/components/schemas/User'
+      channel :
+        $ref: '#/components/schemas/User'
+      createdAt:
+        type: string
+        format: date
+        example: 2023-12-02
+      updatedAt:
+        type: string
+        format: date
+        example: 2024-11-05
+    
+    RegisterForm:
+      required:
+        - username
+        - email
+        - fullName
+        - avatar
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+        fullName:
+          type: string
+          example: James
+        avatar:
+          type: string
+          example: 'www.cloudinary.com/images/user/81298nuasd'
+        coverImage:
+          type: string
+          example: 'www.cloudinary.com/images/user/123skm98us'
+        password:
+          type: string
+          format: password
+          example: 1j8dnska3of
+    LoginForm:
+      required:
+        - username
+        - email
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          format: password
+          example: 1j8dnska3of
+    UpdImgForm:
+      type: object
+      properties:
+        avatar:
+          type: string
+          example: 'www.cloudinary.com/images/user/81298nuasd'
+        coverImage:
+          type: string
+          example: 'www.cloudinary.com/images/user/123skm98us'
+    UpdPassForm:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          example: '81298nuasd'
+        newPassword:
+          type: string
+          example: '123skm98us'
+    UpdDetailsForm:
+        type: object
+        properties:
+          fullName:
+            type: string
+            example: 'rohit sharma'
+          
+    
+    RegisterResponse:
+      type: object
+      properties:
+        username:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+        fullName:
+          type: string
+          example: James
+        avatar:
+          type: string
+          example: 'www.cloudinary.com/images/user/81298nuasd'
+        coverImage:
+          type: string
+          example: 'www.cloudinary.com/images/user/123skm98us'
+
+    LoginResponse:
+      type: object
+    
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        data:
+          type: object
+        message:
+          type: string
+        success:
+          type: boolean
+      xml:
+        name: '##default'
+  requestBodies:
+    Register:
+      description: Pet object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterForm'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/RegisterForm'
+    Login:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/LoginForm'
+  

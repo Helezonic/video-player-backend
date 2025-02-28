@@ -28,7 +28,7 @@ router.route("/login").post(logIn) //Test Passed
 router.route("/logout").post(verifyJWT,logOut) //Test Passed
 
 //get current user endpoint
-router.route("/get-user").post(verifyJWT, getCurrentUser) //Test Passed
+router.route("/get-user").get(verifyJWT, getCurrentUser) //Test Passed
 
 //regenerate accesstoken - REDIRECTION
 router.route("/regen-access").post(regenerateAccessToken)
@@ -58,6 +58,4 @@ router.route("/:id").get(verifyJWT,getUserChannelProfile)
 router.route("/history").get(verifyJWT, getWatchHistory)
 
 module.exports = router
-
-
 console.log("End of Router")
