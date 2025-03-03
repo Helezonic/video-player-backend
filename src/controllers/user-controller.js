@@ -138,7 +138,8 @@ const logIn = asyncHandler(
     const dBSearchForResponse = await User.findById(searchDB._id).select("-password -refreshToken")
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
-      secure : true 
+      secure : true,
+      sameSite : "none" 
     }
     res.status(200)
     .cookie("accessToken",accessToken,options)

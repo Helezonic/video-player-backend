@@ -19,15 +19,7 @@ app.get("/", (_, res) => {
 })
 
 app.get("/about", (_,res) => {
-  res.send(`
-    <div style="height: 100%; width: 100%; border: 1px solid blue; display:flex ; flex-direction: column;  margin:0 ; padding: 0; background-color:indigo">
-      <div style="border: 1px solid red; width: 250px; margin:auto ; padding:20px ; background-color:white">
-        <h1>ABOUT. </h1>
-        <a href="/"><h2><-- Go home</h2></a>
-        <a href="/api/user/register"><h2>REGISTER</h2></a>
-      <div>
-    </div>
-    `)
+  res.sendFile(path.join(__dirname,"../views/about.html"))
 })
 
 console.log("2 End of Index")

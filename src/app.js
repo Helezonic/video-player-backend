@@ -8,15 +8,14 @@ const ApiError = require("./utils/apiError.js");
 const path = require("path")
 
 const app = express();
-const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"))
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 console.log("3 Start of App")
 
 //---------------------------------------------------------------
 //DEFAULT MIDDLEWARES
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
-  credentials: true
+  credentials: true // To accept cookies from client
 }
 ));
 
@@ -33,6 +32,9 @@ app.use(cookieParser()); // To access cookies both from request and store as res
 const router = require("./routes/user-router.js");
 
 //API ENDPOINT AS MIDDLEWARE
+const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.use("/api/user",router)
 
 
