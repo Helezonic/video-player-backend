@@ -139,7 +139,7 @@ const logIn = asyncHandler(
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
       secure : false,
-      sameSite : "none" 
+      sameSite : "Lax" 
     }
     res.status(200)
     .cookie("accessToken",accessToken,options)
@@ -171,7 +171,7 @@ const logOut = asyncHandler(
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
       secure : false,
-      sameSite : "none"
+      sameSite : "Lax"
     }
 
     res.status(200)
