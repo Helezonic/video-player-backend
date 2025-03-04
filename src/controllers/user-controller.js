@@ -170,7 +170,7 @@ const logOut = asyncHandler(
 
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
-      secure : false
+      secure : false,
       sameSite : "none"
     }
 
