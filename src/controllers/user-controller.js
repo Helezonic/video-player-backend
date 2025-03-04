@@ -139,7 +139,8 @@ const logIn = asyncHandler(
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
       secure : true,
-      sameSite : "None" 
+      sameSite : "None",
+      domain : ".video-player-frontend-production.up.railway.app"
     }
     res.status(200)
     .cookie("accessToken",accessToken,options)
@@ -171,7 +172,8 @@ const logOut = asyncHandler(
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
       secure : true,
-      sameSite : "None"
+      sameSite : "None",
+      domain : ".video-player-frontend-production.up.railway.app"
     }
 
     res.status(200)
