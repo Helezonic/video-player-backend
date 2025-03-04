@@ -138,7 +138,7 @@ const logIn = asyncHandler(
     const dBSearchForResponse = await User.findById(searchDB._id).select("-password -refreshToken")
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
-      secure : true,
+      secure : false,
       sameSite : "none" 
     }
     res.status(200)
@@ -170,7 +170,8 @@ const logOut = asyncHandler(
 
     const options = { //so that client can't edit or change the tokens
       httpOnly : true,
-      secure : true 
+      secure : false
+      sameSite : "none"
     }
 
     res.status(200)
@@ -211,7 +212,7 @@ const regenerateAccessToken = asyncHandler(
   
       const options = { //so that client can't edit or change the tokens
         httpOnly : true,
-        secure : true 
+        secure : false 
       }
 
       //Or should you regenerate both access and refresh token?
