@@ -109,7 +109,7 @@ const logIn = asyncHandler(
       {
         $and : [{userName},{email}]
       }
-    ).select('-__v -password')
+    ).select('-__v')
     console.log("--DB Found", searchDB)
 
     if(!searchDB){
