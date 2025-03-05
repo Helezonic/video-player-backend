@@ -140,6 +140,7 @@ const logIn = asyncHandler(
       httpOnly : true,
       secure : process.env.NODE_ENV === "production", //if env is development, secure is false
       sameSite : "None",
+      expires : new Date(Date.now() + process.env.ACCESS_TOKEN_EXPIRY * 1000) //expires in 15 minutes
       
     }
 
@@ -177,9 +178,7 @@ const logOut = asyncHandler(
     const options = { //credentials settings
       httpOnly : true,
       secure : process.env.NODE_ENV === "production",
-      sameSite : "None",
-      domain : ".video-player-frontend-production.up.railway.app"
-
+      sameSite : "None"
     }
     
     console.log("-Options", options)
