@@ -139,7 +139,8 @@ const logIn = asyncHandler(
     const options = { //credentials behaviour
       httpOnly : true,
       secure : process.env.NODE_ENV === "production", //if env is development, secure is false
-      sameSite : "None" 
+      sameSite : "None",
+      domain : ".video-player-frontend-production.up.railway.app"
     }
 
     console.log("-Options", options)
@@ -176,7 +177,9 @@ const logOut = asyncHandler(
     const options = { //credentials settings
       httpOnly : true,
       secure : process.env.NODE_ENV === "production",
-      sameSite : "None"
+      sameSite : "None",
+      domain : ".video-player-frontend-production.up.railway.app"
+
     }
     
     console.log("-Options", options)
@@ -219,9 +222,9 @@ const regenerateAccessToken = asyncHandler(
   
       const options = { //so that client can't edit or change the tokens
         httpOnly : true,
-        secure : true, 
-        sameSite: "Lax",
-        
+        secure : process.env.NODE_ENV === "production",
+        sameSite : "None",
+        domain : ".video-player-frontend-production.up.railway.app"
       }
 
       //Or should you regenerate both access and refresh token?
