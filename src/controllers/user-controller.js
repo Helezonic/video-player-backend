@@ -101,7 +101,7 @@ const logIn = asyncHandler(
     //check whether fields are empty
     if( !(email && userName && password))
       throw new ApiError(400, "Empty Fields")
-    console.log("Destructured", "\nemail: ", email, "\nuserName: ", userName, "\npassword: ", password)
+    console.log("--Destructured", "\nemail: ", email, "\nuserName: ", userName, "\npassword: ", password)
 
 
     //if not, search for them in the database
@@ -110,42 +110,44 @@ const logIn = asyncHandler(
         $and : [{userName},{email}]
       }
     )
-    console.log("searchDB", searchDB)
+    console.log("--DB Found", searchDB)
 
     if(!searchDB){
       throw new ApiError(400, "User doesn't exist")
     } 
-    console.log("User found")
+    console.log("--User found")
 
     //Compare the password with bcrypt compare
     const passCheck = await searchDB.isPasswordCorrect(password)
     if(!passCheck){
       throw new ApiError(400, "Password error")
     }
-    console.log("Password Correct")
+    console.log("--Password Correct")
 
     //if all are good, create Access and Refresh tokens
     const accessToken = await searchDB.generateAccessToken()
     const refreshToken = await searchDB.generateRefreshToken()
-    console.log("Access and Refresh Token Generated")
+    console.log("--Access and Refresh Token Generated")
 
     //add & save Refresh Token in the queried document
     searchDB.refreshToken = refreshToken
     await searchDB.save({validateBeforeSave: false}) //so that the document as a whole is saved no validation.
-    console.log("Refresh Token added and saved")
+    console.log("--Refresh Token added and saved")
 
     //return found user as ApiResponse with no password but refreshToken, accessToken as cookie
     const dBSearchForResponse = await User.findById(searchDB._id).select("-password -refreshToken")
-    const options = { //so that client can't edit or change the tokens
+    const options = { //credentials behaviour
       httpOnly : true,
-      secure : true,
+      secure : process.env.NODE_ENV === "production", //if env is development, secure is false
       sameSite : "none" 
     }
+    console.log("--Options secure", options)
     res.status(200)
     .cookie("accessToken",accessToken,options)
     .cookie("refreshToken",refreshToken,options)
     .json(new ApiResponse(200, {userData: dBSearchForResponse, accessToken, refreshToken}, "Successful Login"))
 
+    console.log("-------LOGIN DONE-----------")
   }
 );
 
@@ -156,7 +158,7 @@ const logOut = asyncHandler(
     console.log("--------------LOGOUT------------")
     //userId of user through middleware
     const userId = req.userId
-    console.log(userId)
+    console.log("-",userId)
 
     //delete refreshToken from db, returns old document from DB by default
     const loggedOutDB = await User.findByIdAndUpdate(userId, 
@@ -168,16 +170,18 @@ const logOut = asyncHandler(
       }
     ).select("-password")
 
-    const options = { //so that client can't edit or change the tokens
+    const options = { //credentials settings
       httpOnly : true,
-      secure : true 
+      secure : process.env.NODE_ENV === "production",
+      sameSite : "Lax"
     }
-
+    
     res.status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200,{loggedOutDB}, "User Logged out"))
 
+    console.log("-------LOGOUT DONE-----------")
   }
 );
 
@@ -211,7 +215,9 @@ const regenerateAccessToken = asyncHandler(
   
       const options = { //so that client can't edit or change the tokens
         httpOnly : true,
-        secure : true 
+        secure : true, 
+        sameSite: "Lax",
+        
       }
 
       //Or should you regenerate both access and refresh token?

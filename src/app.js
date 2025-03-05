@@ -15,7 +15,7 @@ console.log("3 Start of App")
 //DEFAULT MIDDLEWARES
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
-  credentials: true // To accept cookies from client
+  credentials: true // To accept cookies & auth Header from client
 }
 ));
 
@@ -25,7 +25,7 @@ app.use(express.urlencoded({extended: true, limit: "16kb"})); //To parse urlenco
 
 app.use(express.static('public')); // To serve static files
 
-app.use(cookieParser()); // To access cookies both from request and store as response
+app.use(cookieParser()); // To access cookies from request
 
 //---------------------------------------------------------------
 //Import router
