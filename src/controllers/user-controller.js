@@ -109,7 +109,7 @@ const logIn = asyncHandler(
       {
         $and : [{userName},{email}]
       }
-    )
+    ).select('-__v -password')
     console.log("--DB Found", searchDB)
 
     if(!searchDB){
@@ -132,16 +132,19 @@ const logIn = asyncHandler(
     //add & save Refresh Token in the queried document
     searchDB.refreshToken = refreshToken
     await searchDB.save({validateBeforeSave: false}) //so that the document as a whole is saved no validation.
-    console.log("--Refresh Token added and saved")
+    console.log("--Refresh Token added and saved in DB")
 
     //return found user as ApiResponse with no password but refreshToken, accessToken as cookie
-    const dBSearchForResponse = await User.findById(searchDB._id).select("-password -refreshToken")
+    const dBSearchForResponse = await User.findById(searchDB._id).select("-password -refreshToken -__v")
     const options = { //credentials behaviour
       httpOnly : true,
       secure : process.env.NODE_ENV === "production", //if env is development, secure is false
-      sameSite : "none" 
+      sameSite : "None" 
     }
-    console.log("--Options secure", options)
+
+    console.log("-Options", options)
+
+    
     res.status(200)
     .cookie("accessToken",accessToken,options)
     .cookie("refreshToken",refreshToken,options)
@@ -173,9 +176,10 @@ const logOut = asyncHandler(
     const options = { //credentials settings
       httpOnly : true,
       secure : process.env.NODE_ENV === "production",
-      sameSite : "Lax"
+      sameSite : "None"
     }
     
+    console.log("-Options", options)
     res.status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
