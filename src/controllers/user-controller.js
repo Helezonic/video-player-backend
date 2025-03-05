@@ -140,7 +140,7 @@ const logIn = asyncHandler(
       httpOnly : true,
       secure : process.env.NODE_ENV === "production", //if env is development, secure is false
       sameSite : "None",
-      domain : ".video-player-frontend-production.up.railway.app"
+      
     }
 
     console.log("-Options", options)
