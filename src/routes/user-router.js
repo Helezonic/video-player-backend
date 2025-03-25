@@ -31,7 +31,7 @@ router.route("/logout").post(verifyJWT,logOut) //Test Passed
 router.route("/get-user").get(verifyJWT, getCurrentUser) //Test Passed
 
 //regenerate accesstoken - REDIRECTION
-router.route("/regen-access").post(regenerateAccessToken)
+router.route("/regen-access").get(regenerateAccessToken)
 
 //update user-pass endpoint - FORM BASED, REDIRECT TO CHANNEL PAGE LOGGED IN
 router.route("/update-pass").post(verifyJWT,changeCurrentPassword) //Test Passed

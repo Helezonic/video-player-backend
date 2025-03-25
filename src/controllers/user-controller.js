@@ -222,7 +222,7 @@ const regenerateAccessToken = asyncHandler(
         httpOnly : true,
         secure : process.env.NODE_ENV === "production",
         sameSite : "None",
-        domain : ".video-player-frontend-production.up.railway.app"
+        
       }
 
       //Or should you regenerate both access and refresh token?
@@ -230,7 +230,7 @@ const regenerateAccessToken = asyncHandler(
       .cookie("accessToken", accessToken, options)
       .json(new ApiResponse(200, {}, "Access Token Regenerated"))
     } catch (error) {
-      throw new ApiError(401, "Token decoding error")
+      throw new ApiError(401, error.message || "Token decoding error")
     }
   }
 )

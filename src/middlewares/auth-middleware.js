@@ -22,7 +22,8 @@ const verifyJWT = asyncHandler(
       console.log("---------JWT VERIFIED----------")
       next()
     } catch (error) {
-      throw new ApiError(401, "Token decoding error")
+      console.error("JWT Verification Error:", error)
+      throw new ApiError(401, error.message || "Token decoding error")
     }
   }
 )
