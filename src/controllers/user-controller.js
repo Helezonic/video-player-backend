@@ -138,7 +138,7 @@ const logIn = asyncHandler(
     const dBSearchForResponse = await User.findById(searchDB._id).select("-password -refreshToken -__v")
     const options = { //credentials behaviour
       httpOnly : true,
-      secure : process.env.NODE_ENV === "production", //if env is development, secure is false
+      secure : true, //if env is development, secure is false
       sameSite : "None",
       
     }
