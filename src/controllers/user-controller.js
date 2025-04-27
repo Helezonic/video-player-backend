@@ -220,7 +220,7 @@ const regenerateAccessToken = asyncHandler(
   
       const options = { //so that client can't edit or change the tokens
         httpOnly : true,
-        secure : process.env.NODE_ENV === "production",
+        secure : true,
         sameSite : "None",
         
       }
