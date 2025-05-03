@@ -8,6 +8,13 @@ const { default: mongoose } = require("mongoose");
 
 console.log("Start of User Controller")
 
+const options = { //credentials settings
+  httpOnly : true,
+  secure : true,
+  sameSite : "none"
+}
+
+
 //REGISTER USER----------------------
 const registerUser = asyncHandler(
   async (req,res) => {
@@ -136,12 +143,8 @@ const logIn = asyncHandler(
 
     //return found user as ApiResponse with no password but refreshToken, accessToken as cookie
     const dBSearchForResponse = await User.findById(searchDB._id).select("-password -refreshToken -__v")
-    const options = { //credentials behaviour
-      httpOnly : true,
-      secure : true, //if env is development, secure is false
-      sameSite : "None",
-      
-    }
+    
+    
 
     console.log("-Options", options)
 
@@ -173,14 +176,9 @@ const logOut = asyncHandler(
         new : true //returning doc is updated one
       }
     ).select("-password")
-
-    const options = { //credentials settings
-      httpOnly : true,
-      secure : process.env.NODE_ENV === "production",
-      sameSite : "None"
-    }
     
     console.log("-Options", options)
+
     res.status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
@@ -189,6 +187,7 @@ const logOut = asyncHandler(
     console.log("-------LOGOUT DONE-----------")
   }
 );
+
 
 //When Access Token expires, regenerate with Refresh Token
 const regenerateAccessToken = asyncHandler(
@@ -218,12 +217,7 @@ const regenerateAccessToken = asyncHandler(
       //Generate new access token and send response
       const accessToken = await searchDB.generateAccessToken()
   
-      const options = { //so that client can't edit or change the tokens
-        httpOnly : true,
-        secure : true,
-        sameSite : "None",
-        
-      }
+
 
       //Or should you regenerate both access and refresh token?
       res.status(200)
@@ -313,7 +307,7 @@ const updateUserDetails = asyncHandler(
         $set: {fullName: fullName}
       },
       {
-        new: true
+        new: true //Return updated doc
       }
     ).select("-password -refreshToken")
     
@@ -536,6 +530,26 @@ const getWatchHistory = asyncHandler(
     .json(new ApiResponse(200, {history}, "Watch History fetched successfully"))
 })
 
+//To get list of all registered users
+const getAllUsers = asyncHandler(
+  async (req, res) => {
+    console.log("---------GET ALL USERS----------");
+    
+    
+    // Fetch all users from the database, selecting only id, avatar, and fullname
+    const users = await User.find({ _id: { $ne: req.userId } }).select("_id avatar fullname");
+
+    if (!users || users.length === 0) {
+      throw new ApiError(404, "No users found");
+    }
+
+    console.log("Users fetched successfully");
+
+    res.status(200).json(new ApiResponse(200, { users }, "Users fetched successfully"));
+  }
+);
+
+//To add a video
 
 console.log("End of User Controller")
 module.exports = {
@@ -548,5 +562,6 @@ module.exports = {
   getCurrentUser,
   updateImages,
   getUserChannelProfile,
-  getWatchHistory
+  getWatchHistory,
+  getAllUsers
 } 

@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {registerUser, logIn, logOut, regenerateAccessToken, changeCurrentPassword, updateUserDetails, getCurrentUser, updateImages, getUserChannelProfile, getWatchHistory} = require("../controllers/user-controller.js");
+const {registerUser, logIn, logOut, regenerateAccessToken, changeCurrentPassword, updateUserDetails, getCurrentUser, updateImages, getUserChannelProfile, getWatchHistory, getAllUsers} = require("../controllers/user-controller.js");
 const { upload } = require("../middlewares/multer-middleware.js");
 const { verifyJWT } = require("../middlewares/auth-middleware.js");
 
@@ -56,6 +56,13 @@ router.route("/:id").get(verifyJWT,getUserChannelProfile)
 
 //getWatchHistory - WATCH HISTORY BUTTON, HISTORY PAGE
 router.route("/history").get(verifyJWT, getWatchHistory)
+
+//addVideo
+//router.route("/add-video").post(verifyJWT, addVideo)
+
+//getAllUsers
+router.route("/all-users").get(verifyJWT, getAllUsers)
+
 
 module.exports = router
 console.log("End of Router")

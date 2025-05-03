@@ -5,6 +5,8 @@ const path = require("path")
 
 console.log("1 Start of Index")
 
+
+
 //Connect the DATABASE
 connectdb().then(()=>{
   //After connection attempt, listen on port.
