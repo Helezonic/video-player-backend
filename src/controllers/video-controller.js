@@ -49,6 +49,43 @@ const uploadVideo = asyncHandler(async (req, res) => {
   res.status(201).json(new ApiResponse(201, { video }, "Video uploaded successfully"));
 });
 
+
+// Function to get all videos for a specific owner
+const findOwnerVideos = asyncHandler(async (req, res) => {
+  const ownerId = req.userId; // Extracted from JWT middleware
+
+  console.log("Fetching videos for owner:", ownerId);
+
+  // Fetch videos from the database where owner matches userId
+  const videos = await Video.find({ owner: ownerId });
+
+  if (!videos || videos.length === 0) {
+    throw new ApiError(404, "No videos found for this user");
+  }
+
+  res.status(200).json(new ApiResponse(200, { videos }, "Videos fetched successfully"));
+});
+
+
+// Function to get all videos for a specific owner
+const findUserVideos = asyncHandler(async (req, res) => {
+  const ownerId = req.params.id; // Extracted from JWT middleware
+
+  console.log("Fetching videos for owner:", ownerId);
+
+  // Fetch videos from the database where owner matches userId
+  const videos = await Video.find({ owner: ownerId });
+
+  if (!videos || videos.length === 0) {
+    throw new ApiError(404, "No videos found for this user");
+  }
+
+  res.status(200).json(new ApiResponse(200, { videos }, "Videos fetched successfully"));
+});
+
+
 module.exports = {
   uploadVideo,
+  findOwnerVideos,
+  findUserVideos
 };

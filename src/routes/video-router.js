@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { uploadVideo } = require("../controllers/video-controller.js");
+const { uploadVideo, findOwnerVideos } = require("../controllers/video-controller.js");
 const { upload } = require("../middlewares/multer-middleware.js");
 const { verifyJWT } = require("../middlewares/auth-middleware.js");
 
@@ -16,5 +16,7 @@ router.route("/upload").post(
   ]),
   uploadVideo
 );
+
+router.route("/get-owner-videos").get(verifyJWT, findOwnerVideos)
 
 module.exports = router;
