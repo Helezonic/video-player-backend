@@ -1,8 +1,9 @@
-const asyncHandler = require("express-async-handler");
-const Video = require("../models/video-model");
-const { uploadToCloudinary } = require("../utils/cloudinary-utils"); // Utility to upload files to Cloudinary
-const ApiError = require("../utils/ApiError");
-const ApiResponse = require("../utils/ApiResponse");
+const asyncHandler = require("../utils/asyncHandler.js");
+const Video = require("../models/video-model.js");
+const { uploadToCloudinary } = require("../utils/cloudinary.js"); // Utility to upload files to Cloudinary
+const ApiError = require("../utils/apiError.js");
+const ApiResponse = require("../utils/apiResponse.js");
+
 
 const uploadVideo = asyncHandler(async (req, res) => {
   console.log("-------------VIDEO UPLOAD------------");
