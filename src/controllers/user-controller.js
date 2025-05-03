@@ -537,7 +537,7 @@ const getAllUsers = asyncHandler(
     
     
     // Fetch all users from the database, selecting only id, avatar, and fullname
-    const users = await User.find({ _id: { $ne: req.userId } }).select("_id avatar fullname");
+    const users = await User.find({ _id: { $ne: req.userId } }).select("_id avatar fullName");
 
     if (!users || users.length === 0) {
       throw new ApiError(404, "No users found");
