@@ -3,7 +3,7 @@ const {registerUser, logIn, logOut, regenerateAccessToken, changeCurrentPassword
 const { upload } = require("../middlewares/multer-middleware.js");
 const { verifyJWT } = require("../middlewares/auth-middleware.js");
 
-console.log("5 Start of Router")
+console.log("5 Start of User Router")
 
 const router = Router()
 
@@ -55,12 +55,9 @@ router.route("/update-details").post(verifyJWT,updateUserDetails) //Test Passed
 router.route("/all-users").get(verifyJWT, getAllUsers)
 
 
-
 //getWatchHistory - WATCH HISTORY BUTTON, HISTORY PAGE
 router.route("/history").get(verifyJWT, getWatchHistory)
 
-//addVideo
-//router.route("/add-video").post(verifyJWT, addVideo)
 
 //getChannelDetails - CHANNEL BUTTON, OPEN CHANNEL PAGE
 router.route("/:id").get(verifyJWT,getUserChannelProfile)

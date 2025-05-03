@@ -29,13 +29,16 @@ app.use(cookieParser()); // To access cookies from request
 
 //---------------------------------------------------------------
 //Import router
-const router = require("./routes/user-router.js");
+const userRouter = require("./routes/user-router.js");
+const videoRouter = require("./routes/video-router.js");
 
 //API ENDPOINT AS MIDDLEWARE
 const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"))
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/api/user",router)
+app.use("/api/user",userRouter)
+
+app.use("/api/video",videoRouter)
 
 
 

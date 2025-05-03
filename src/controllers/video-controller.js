@@ -1,0 +1,53 @@
+const asyncHandler = require("express-async-handler");
+const Video = require("../models/video-model");
+const { uploadToCloudinary } = require("../utils/cloudinary-utils"); // Utility to upload files to Cloudinary
+const ApiError = require("../utils/ApiError");
+const ApiResponse = require("../utils/ApiResponse");
+
+const uploadVideo = asyncHandler(async (req, res) => {
+  console.log("-------------VIDEO UPLOAD------------");
+
+  const { title, description } = req.body;
+  const ownerId = req.userId; // Extracted from JWT middleware
+
+  if (!title || !description) {
+    throw new ApiError(400, "Title and description are required");
+  }
+
+  console.log ("title-", title, "description-", description)
+
+  if (!req.files?.video || !req.files?.thumbnail) {
+    throw new ApiError(400, "Both video and thumbnail files are required");
+  }
+
+  // Upload video to Cloudinary (or another cloud storage service)
+  const videoPath = req.files?.video[0]?.path;
+  const videoUrl = await uploadToCloudinary(videoPath, "Videos");
+  if (!videoUrl) {
+    throw new ApiError(500, "Failed to upload video");
+  }
+
+  // Upload thumbnail to Cloudinary
+  const thumbnailPath = req.files.thumbnail[0].path;
+  const thumbnailUrl = await uploadToCloudinary(thumbnailPath, "Thumbnails");
+  if (!thumbnailUrl) {
+    throw new ApiError(500, "Failed to upload thumbnail");
+  }
+
+  console.log("videoUrl", videoUrl, "thumbnailUrl", thumbnailUrl)
+  
+  // Create a new video instance in the database
+  const video = await Video.create({
+    videoFile : videoUrl,
+    thumbnail : thumbnailUrl,
+    title,
+    description,
+    owner: ownerId, // Associate with the logged-in user
+  });
+
+  res.status(201).json(new ApiResponse(201, { video }, "Video uploaded successfully"));
+});
+
+module.exports = {
+  uploadVideo,
+};

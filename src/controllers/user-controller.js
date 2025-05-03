@@ -416,7 +416,7 @@ const getUserChannelProfile = asyncHandler (
     const aggregate = await User.aggregate([
       {
         $match : {
-          _id : new mongoose.Types.ObjectId(userId)
+          _id : new mongoose.Types.ObjectId(id)
         }
       },
       //Get list of documents of users who has subscribed to you(logged in channel)
