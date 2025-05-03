@@ -1,5 +1,5 @@
 const asyncHandler = require("../utils/asyncHandler.js");
-const Video = require("../models/video-model.js");
+const { Video } = require("../models/video-model.js");
 const { uploadToCloudinary } = require("../utils/cloudinary.js"); // Utility to upload files to Cloudinary
 const ApiError = require("../utils/apiError.js");
 const ApiResponse = require("../utils/apiResponse.js");
