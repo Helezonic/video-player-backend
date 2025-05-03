@@ -51,8 +51,10 @@ router.route("/update-img").post(verifyJWT, upload.fields([
 //update user-details endpoint - FORM BASED, REDIRECT TO CHANNEL PAGE LOGGED IN
 router.route("/update-details").post(verifyJWT,updateUserDetails) //Test Passed
 
-//getChannelDetails - CHANNEL BUTTON, OPEN CHANNEL PAGE
-router.route("/:id").get(verifyJWT,getUserChannelProfile)
+//getAllUsers
+router.route("/all-users").get(verifyJWT, getAllUsers)
+
+
 
 //getWatchHistory - WATCH HISTORY BUTTON, HISTORY PAGE
 router.route("/history").get(verifyJWT, getWatchHistory)
@@ -60,8 +62,8 @@ router.route("/history").get(verifyJWT, getWatchHistory)
 //addVideo
 //router.route("/add-video").post(verifyJWT, addVideo)
 
-//getAllUsers
-router.route("/all-users").get(verifyJWT, getAllUsers)
+//getChannelDetails - CHANNEL BUTTON, OPEN CHANNEL PAGE
+router.route("/:id").get(verifyJWT,getUserChannelProfile)
 
 
 module.exports = router
