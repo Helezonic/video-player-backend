@@ -1,7 +1,7 @@
 const { Router } = require("express");
-const { uploadVideo } = require("../controllers/video-controller");
-const verifyJWT = require("../middleware/verifyJWT");
-const upload = require("../middlewares/multer-middleware").upload;
+const { uploadVideo } = require("../controllers/video-controller.js");
+const { upload } = require("../middlewares/multer-middleware.js");
+const { verifyJWT } = require("../middlewares/auth-middleware.js");
 
 const router = Router();
 

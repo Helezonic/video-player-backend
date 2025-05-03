@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+const { Schema, default: mongoose } = require("mongoose");
 
 const videoSchema = new Schema({
   videoFile : {
