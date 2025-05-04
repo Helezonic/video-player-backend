@@ -1,4 +1,4 @@
-const { Subscription } = require('../models/subscription-model.js');
+const { Subscription } = require('../models/subscriber-model.js');
 
 const subscribeToChannel = async (req, res) => {
   try {
