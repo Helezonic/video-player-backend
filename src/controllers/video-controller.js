@@ -24,6 +24,7 @@ const uploadVideo = asyncHandler(async (req, res) => {
 
   // Upload video to Cloudinary (or another cloud storage service)
   const videoPath = req.files?.video[0]?.path;
+  console.log(req.files?.video[0])
   const videoUrl = await uploadToCloudinary(videoPath, "Videos");
   if (!videoUrl) {
     throw new ApiError(500, "Failed to upload video");
@@ -44,6 +45,8 @@ const uploadVideo = asyncHandler(async (req, res) => {
     thumbnail : thumbnailUrl,
     title,
     description,
+    views : 0,
+    isPublished : true,
     owner: ownerId, // Associate with the logged-in user
   });
 
