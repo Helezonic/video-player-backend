@@ -232,7 +232,7 @@ const regenerateAccessToken = asyncHandler(
 //Respond with Current User Details | ALL ERROR CASES CHECKED THROUGH POSTMAN
 const getCurrentUser = asyncHandler(
   async (req, res) => {
-    console.log("---------GET USER----------")
+    console.log("---------GET CURRENT USER----------")
     const user = await User.findById(req.userId).select("-password -refreshToken")
     
     if(!user)
@@ -406,7 +406,7 @@ const updateImages = asyncHandler(
 const getUserChannelProfile = asyncHandler (
   async (req,res) => {
     const userId = req.userId
-    const id = req.params?.id
+    const id = req.params?.id || req.userId
     if(!id){
       throw new ApiError(404,"No id")
     }
@@ -433,7 +433,7 @@ const getUserChannelProfile = asyncHandler (
         $lookup: {
           from : "subscriptions",
           localField : "_id",
-          foreignField : "subscriber",
+          foreignField : "subscribers",
           as : "subscribedTo"
         }
       },
@@ -549,7 +549,21 @@ const getAllUsers = asyncHandler(
   }
 );
 
-//To add a video
+const getUser = asyncHandler(
+  async (req, res) => {
+    console.log("---------GET USER----------")
+    const id = req.params?.id
+    const user = await User.findById(id).select("-password -refreshToken")
+    
+    if(!user)
+      throw new ApiError(400, "User not found")
+    console.log("User found")
+
+    res.status(200)
+    .json(new ApiResponse(200, {user}, "User found"))
+  }
+)
+
 
 console.log("End of User Controller")
 module.exports = {
@@ -563,5 +577,6 @@ module.exports = {
   updateImages,
   getUserChannelProfile,
   getWatchHistory,
-  getAllUsers
+  getAllUsers,
+  getUser
 } 

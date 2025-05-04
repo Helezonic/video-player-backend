@@ -1,9 +1,9 @@
-const Subscription = require('../models/subscription-model.js'); // Assuming you have a Subscription model
+const { Subscription } = require('../models/subscription-model.js');
 
 const subscribeToChannel = async (req, res) => {
   try {
     const userId = req.id; // Logged-in user ID from JWT middleware
-    const channelId = req.params.channelId; // Channel ID from request parameters
+    const channelId = req.params.id; // Channel ID from request parameters
 
     // Check if the user is trying to subscribe to their own channel
     if (userId === channelId) {
@@ -23,7 +23,6 @@ const subscribeToChannel = async (req, res) => {
     const newSubscription = new Subscription({
       subscriber: userId,
       channel: channelId,
-      subscribedAt: new Date(),
     });
 
     await newSubscription.save();

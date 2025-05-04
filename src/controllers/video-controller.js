@@ -3,6 +3,7 @@ const { Video } = require("../models/video-model.js");
 const { uploadToCloudinary } = require("../utils/cloudinary.js"); // Utility to upload files to Cloudinary
 const ApiError = require("../utils/apiError.js");
 const ApiResponse = require("../utils/apiResponse.js");
+const { User } = require("../models/user-model.js");
 
 
 const uploadVideo = asyncHandler(async (req, res) => {
@@ -50,7 +51,7 @@ const uploadVideo = asyncHandler(async (req, res) => {
 });
 
 
-// Function to get all videos for a specific owner
+// Function to get all videos of logged in User
 const findOwnerVideos = asyncHandler(async (req, res) => {
   const ownerId = req.userId; // Extracted from JWT middleware
 
@@ -67,14 +68,16 @@ const findOwnerVideos = asyncHandler(async (req, res) => {
 });
 
 
-// Function to get all videos for a specific owner
-const findUserVideos = asyncHandler(async (req, res) => {
-  const ownerId = req.params.id; // Extracted from JWT middleware
 
-  console.log("Fetching videos for owner:", ownerId);
+
+// Function to get all videos for a specific user
+const findUserVideos = asyncHandler(async (req, res) => {
+  const userId = req.params.id; 
+
+  console.log("Fetching videos for owner:", userId);
 
   // Fetch videos from the database where owner matches userId
-  const videos = await Video.find({ owner: ownerId });
+  const videos = await Video.find({ owner: userId });
 
   if (!videos || videos.length === 0) {
     throw new ApiError(404, "No videos found for this user");
@@ -84,8 +87,50 @@ const findUserVideos = asyncHandler(async (req, res) => {
 });
 
 
+
+
+//Add to watchHistory, increase a view to video
+const addToWatchHistory = asyncHandler(async (req, res) => {
+  const videoId = req.params.id;
+  console.log(videoId, "videoId")
+  const userId = req.userId; // Extracted from JWT middleware
+
+  // Find the video and increment its views
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+  video.views += 1;
+  await video.save();
+
+  // Find the user and add the video to their watch history
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  if (!user.watchHistory.includes(videoId)) {
+    user.watchHistory.push(videoId);
+    await user.save();
+  }
+
+  res.status(200).json({
+    message: "View added and video added to watch history",
+    videoViews: video.views,
+  });
+})
+
+
+
+
+//Get video details
+/* const getVideoDetails = asyncHandler(async (req,res) => {
+  
+}) */
+
+
 module.exports = {
   uploadVideo,
   findOwnerVideos,
-  findUserVideos
+  findUserVideos,
+  addToWatchHistory
 };

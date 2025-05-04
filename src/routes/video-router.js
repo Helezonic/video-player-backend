@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { uploadVideo, findOwnerVideos } = require("../controllers/video-controller.js");
+const { uploadVideo, findOwnerVideos,findUserVideos, addToWatchHistory } = require("../controllers/video-controller.js");
 const { upload } = require("../middlewares/multer-middleware.js");
 const { verifyJWT } = require("../middlewares/auth-middleware.js");
 
@@ -17,6 +17,16 @@ router.route("/upload").post(
   uploadVideo
 );
 
+//Get logged in user's video
 router.route("/get-owner-videos").get(verifyJWT, findOwnerVideos)
+
+//Get other user's videos
+router.route("/get-user-videos").get(verifyJWT,findUserVideos)
+
+//Add to watchHistory, increase view
+router.route("/add-to-history/:id").post(verifyJWT, addToWatchHistory)
+
+//Fetch video details
+router.route("/:id")
 
 module.exports = router;
