@@ -58,8 +58,7 @@ router.route("/update-details").post(verifyJWT,updateUserDetails) //Test Passed
 //get current user 
 router.route("/get-user").get(verifyJWT, getCurrentUser) //Test Passed
 
-//getUser
-router.route('/:id').get(getUser)
+
 
 //getAllUsers - TO LIST CHANNELS , HOME PAGE
 router.route("/all-users").get(verifyJWT, getAllUsers)
@@ -67,6 +66,8 @@ router.route("/all-users").get(verifyJWT, getAllUsers)
 //getWatchHistory - WATCH HISTORY BUTTON, HISTORY PAGE
 router.route("/history").get(verifyJWT, getWatchHistory)
 
+//getUser
+router.route('/:id').get(getUser)
 
 //getChannelDetails - CHANNEL BUTTON, OPEN CHANNEL PAGE
 /* router.route("/:id").get(verifyJWT,getUserChannelProfile) */
