@@ -1,5 +1,7 @@
 const multer = require("multer")
 const fs = require("fs")
+const ApiError = require("../utils/apiError")
+
 
 console.log("Start Multer Middleware")
 
