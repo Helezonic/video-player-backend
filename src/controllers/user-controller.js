@@ -406,7 +406,7 @@ const updateImages = asyncHandler(
 const getUserChannelProfile = asyncHandler (
   async (req,res) => {
     const userId = req.userId
-    const id = req.params?.id || req.userId
+    const id = req.params.id 
     if(!id){
       throw new ApiError(404,"No id")
     }
