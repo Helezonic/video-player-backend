@@ -441,11 +441,11 @@ const getUserChannelProfile = asyncHandler (
         $addFields : {
           //Count number of subscribers
           subscriberCount : {
-            $size : "subscribers"
+            $size : "$subscribers"
           },
           //Count number of channels you have subscribed to
           channelsSubscribedToCount : {
-            $size : "subscribedTo"
+            $size : "$subscribedTo"
           },
           //Is the logged in channel subscribed to the current channel?
           isSubscribed : {
