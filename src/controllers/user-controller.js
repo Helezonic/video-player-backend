@@ -520,10 +520,25 @@ const getWatchHistory = asyncHandler(
                   }
                 ]
               }
+            },
+            {
+              // Project only the required fields for videos
+              $project: {
+                _id: 1,
+                thumbnail: 1,
+                title: 1,
+                description: 1,
+              }
             }
           ]
         }
-      }
+      },
+      {
+        // Project only the watchHistory field in the final output
+        $project: {
+          watchHistory: 1, // Include only the watchHistory field
+        },
+      },
     ])
     
     res.status(200)
