@@ -528,6 +528,7 @@ const getWatchHistory = asyncHandler(
                 thumbnail: 1,
                 title: 1,
                 description: 1,
+                owner: 1
               }
             }
           ]
@@ -537,6 +538,7 @@ const getWatchHistory = asyncHandler(
         // Project only the watchHistory field in the final output
         $project: {
           watchHistory: 1, // Include only the watchHistory field
+          _id: 0
         },
       },
     ])
