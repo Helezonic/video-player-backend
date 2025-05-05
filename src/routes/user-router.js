@@ -67,10 +67,10 @@ router.route("/all-users").get(verifyJWT, getAllUsers)
 router.route("/history").get(verifyJWT, getWatchHistory)
 
 //getUser
-router.route('/:id').get(getUser)
+/* router.route('/:id').get(getUser) */
 
 //getChannelDetails - CHANNEL BUTTON, OPEN CHANNEL PAGE
-/* router.route("/:id").get(verifyJWT,getUserChannelProfile) */
+router.route("/:id").get(verifyJWT,getUserChannelProfile)
 
 
 //SUBSCRIPTION
