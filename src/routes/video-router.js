@@ -20,10 +20,10 @@ router.route("/upload").post(
 //Get logged in user's video
 router.route("/get-owner-videos").get(verifyJWT, findOwnerVideos)
 
-//Get other user's videos
-router.route("/get-user-videos").get(verifyJWT,findUserVideos)
+//Get other user's videos - User Id in Paramas
+router.route("/get-user-videos/:id").get(verifyJWT,findUserVideos)
 
-//Add to watchHistory, increase view
+//Add to watchHistory, increase view - Video Id in Params
 router.route("/add-to-history/:id").post(verifyJWT, addToWatchHistory)
 
 //Fetch video details

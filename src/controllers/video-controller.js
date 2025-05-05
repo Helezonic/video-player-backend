@@ -71,13 +71,11 @@ const findOwnerVideos = asyncHandler(async (req, res) => {
 });
 
 
-
-
 // Function to get all videos for a specific user
 const findUserVideos = asyncHandler(async (req, res) => {
-  const userId = req.params.id; 
+  const userId = req.params?.id; 
 
-  console.log("Fetching videos for owner:", userId);
+  console.log("Fetching videos for user:", userId);
 
   // Fetch videos from the database where owner matches userId
   const videos = await Video.find({ owner: userId });
@@ -88,8 +86,6 @@ const findUserVideos = asyncHandler(async (req, res) => {
 
   res.status(200).json(new ApiResponse(200, { videos }, "Videos fetched successfully"));
 });
-
-
 
 
 //Add to watchHistory, increase a view to video
@@ -111,6 +107,8 @@ const addToWatchHistory = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User not found");
   }
+
+  // If video already exists
   if (!user.watchHistory.includes(videoId)) {
     user.watchHistory.push(videoId);
     await user.save();
