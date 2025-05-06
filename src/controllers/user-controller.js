@@ -471,12 +471,13 @@ const getUserChannelProfile = asyncHandler (
           isSubscribed : {
             $cond : {
               //From the list of subscribers added above, is there your channel id on subscriber field?
-              if : {$in: [userId, 
+              if : {$in: [
+                ObjectId(`${userId}`), 
                 {
                   $map: {
                     input: "$subscribers", // Iterate over the subscribers array
                     as: "subscriber", // Alias for each element in the array
-                    in: "$$subscriber.subscriber" // Extract the subscriber field
+                    in: "$$subscribers.subscriber" // Extract the subscriber field
                   }
                 }
               ]},
