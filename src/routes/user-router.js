@@ -2,7 +2,7 @@ const { Router } = require("express");
 const {registerUser, logIn, logOut, regenerateAccessToken, changeCurrentPassword, updateUserDetails, getCurrentUser, updateImages, getUserChannelProfile, getWatchHistory, getAllUsers, getUser} = require("../controllers/user-controller.js");
 const { upload } = require("../middlewares/multer-middleware.js");
 const { verifyJWT } = require("../middlewares/auth-middleware.js");
-const { subscribeToChannel } = require("../controllers/subscription-controller.js");
+const { subscribeToChannel, unsubscribeFromChannel } = require("../controllers/subscription-controller.js");
 
 console.log("5 Start of User Router")
 
@@ -76,6 +76,9 @@ router.route("/:id").get(verifyJWT,getUserChannelProfile)
 //SUBSCRIPTION
 //Subscription route
 router.route("/subscribe/:id").post(verifyJWT,subscribeToChannel)
+
+//Unsubscription route
+router.route("/unsubscribe/:id").post(verifyJWT,unsubscribeFromChannel)
 
 module.exports = router
 console.log("End of Router")

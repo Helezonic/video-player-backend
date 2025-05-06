@@ -38,4 +38,31 @@ const subscribeToChannel = async (req, res) => {
   }
 };
 
-module.exports = { subscribeToChannel };
+const unsubscribeFromChannel = async (req, res) => {
+  try {
+    const userId = req.userId; // Logged-in user ID from JWT middleware
+    const channelId = req.params.id; // Channel ID from request parameters
+
+    // Check if the subscription exists
+    const existingSubscription = await Subscription.findOne({ subscriber: userId, channel: channelId });
+    if (!existingSubscription) {
+      return res.status(404).json({ 
+        message: "You are not subscribed to this channel.", 
+        isSubscribed: false 
+      });
+    }
+
+    // Remove the subscription
+    await Subscription.deleteOne({ subscriber: userId, channel: channelId });
+
+    res.status(200).json({ 
+      message: "Unsubscribed successfully.", 
+      isSubscribed: false 
+    });
+  } catch (error) {
+    console.error("Error unsubscribing from channel:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+module.exports = { subscribeToChannel, unsubscribeFromChannel };
