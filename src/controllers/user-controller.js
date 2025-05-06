@@ -425,7 +425,17 @@ const getUserChannelProfile = asyncHandler (
           from : "subscriptions",
           localField : "_id",
           foreignField : "channel",
-          as : "subscribers"
+          as : "subscribers",
+          pipeline: [
+            {
+              $project: {
+                _id: 0, // Include the _id field
+                channel: 1, // Include the channel field
+                subscriber: 1 // Include the subscriber field
+                // Exclude createdAt, updatedAt, and __v by not projecting them
+              }
+            }
+          ]
         }
       },
       //Get list of documents of users who you have subscribed to.
@@ -434,7 +444,17 @@ const getUserChannelProfile = asyncHandler (
           from : "subscriptions",
           localField : "_id",
           foreignField : "subscriber",
-          as : "subscribedTo"
+          as : "subscribedTo",
+          pipeline: [
+            {
+              $project: {
+                _id: 0, // Include the _id field
+                channel: 1, // Include the channel field
+                subscriber: 1 // Include the subscriber field
+                // Exclude createdAt, updatedAt, and __v by not projecting them
+              }
+            }
+          ]
         }
       },
       {
@@ -451,7 +471,15 @@ const getUserChannelProfile = asyncHandler (
           isSubscribed : {
             $cond : {
               //From the list of subscribers added above, is there your channel id on subscriber field?
-              if : {$in: [userId, "$subscribers.subscriber"]},
+              if : {$in: [userId, 
+                {
+                  $map: {
+                    input: "$subscribers", // Iterate over the subscribers array
+                    as: "subscriber", // Alias for each element in the array
+                    in: "$$subscriber.subscriber" // Extract the subscriber field
+                  }
+                }
+              ]},
               then : true,
               else : false
             }
