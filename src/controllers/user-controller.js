@@ -474,7 +474,7 @@ const getUserChannelProfile = asyncHandler (
             $cond : {
               //From the list of subscribers added above, is there your channel id on subscriber field?
               if : {$in: [
-                ObjectId(userId), 
+                new mongoose.Types.ObjectId(userId), 
                 {
                   $map: {
                     input: "$subscribers", // Iterate over the subscribers array
