@@ -5,6 +5,8 @@ const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinar
 const ApiResponse = require("../utils/apiResponse.js");
 const jwt  = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
+const { ObjectId } = mongoose.Types
+ 
 
 console.log("Start of User Controller")
 
@@ -472,12 +474,12 @@ const getUserChannelProfile = asyncHandler (
             $cond : {
               //From the list of subscribers added above, is there your channel id on subscriber field?
               if : {$in: [
-                ObjectId(`${userId}`), 
+                ObjectId(userId), 
                 {
                   $map: {
                     input: "$subscribers", // Iterate over the subscribers array
                     as: "subscriber", // Alias for each element in the array
-                    in: "$$subscribers.subscriber" // Extract the subscriber field
+                    in: "$$subscriber.subscriber" // Extract the subscriber field
                   }
                 }
               ]},
