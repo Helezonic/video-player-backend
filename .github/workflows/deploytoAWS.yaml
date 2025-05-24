@@ -23,12 +23,12 @@ jobs:
     
     - name: Rsync to EC2 Instance
       uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.UBUNTU_SSH_KEY }}
-          SOURCE: "./"
-          REMOTE_HOST: ${{ secrets.HOST_DNS }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: ${{ secrets.TARGET_DIR }}
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.UBUNTU_SSH_KEY }}
+        SOURCE: "./"
+        REMOTE_HOST: ${{ secrets.HOST_DNS }}
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        TARGET: ${{ secrets.TARGET_DIR }}
 
     - name: Run SSH Commands
       uses: appleboy/ssh-action@v0.1.8
