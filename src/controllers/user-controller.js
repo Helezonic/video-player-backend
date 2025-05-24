@@ -599,7 +599,8 @@ const getAllUsers = asyncHandler(
   }
 );
 
-const getUser = asyncHandler(
+//Deprecated - GetUserChannelProfile used rather.
+/* const getUser = asyncHandler(
   async (req, res) => {
     console.log("---------GET USER----------")
     const id = req.params?.id
@@ -613,7 +614,7 @@ const getUser = asyncHandler(
     .json(new ApiResponse(200, {user}, "User found"))
   }
 )
-
+ */
 
 console.log("End of User Controller")
 module.exports = {
@@ -628,5 +629,5 @@ module.exports = {
   getUserChannelProfile,
   getWatchHistory,
   getAllUsers,
-  getUser
+  
 } 

@@ -228,13 +228,13 @@ paths:
           description: Invalid input
         '422':
           description: Validation exception
-  /user/{userid}:
+  /user/{id}:
     get:
       tags:
         - user
       summary: Get full User channel Profile
       description: When logged it, redirect to Home page with User Profile
-      operationId: getOrderById
+      operationId: 
       parameters:
         - name: userid
           in: path
@@ -264,6 +264,142 @@ paths:
       summary: Watch History of User
       description: Get Watch history of the logged in User
       operationId: createUser
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+                
+  /user/get-user:
+    get:
+      tags:
+        - user
+      summary: Get details of logged in User
+      description:  Get details of logged in User
+      operationId: createUser
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  
+  /user/all-users:
+    get:
+      tags:
+        - user
+      summary: List of all users
+      description: Get list of all registered users
+      operationId: createUser
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      
+  /user/subscribe/{userid}:
+    post:
+      tags:
+        - user
+      summary: Watch History of User
+      description: Get Watch history of the logged in User
+      operationId: createUser
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  
+  /user/unsubscribe/{userid}:
+    post:
+      tags:
+        - user
+      summary: Unsubscribe user
+      description: The logged in User unsubsribes the user
+      operationId: createUser
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'            
+                  
+                
+  /video/upload:
+    post:
+      tags:
+        - video
+      summary: Upload video
+      description: Logged in User uploads a video
+      operationId: createVideo
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+               
+  /video/get-owner-videos:
+    get:
+      tags:
+        - video
+      summary: Owner videos
+      description: Get videos of Logged in User
+      operationId: video API1
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse' 
+
+  /video/get-user-videos/{userid}:
+    get:
+      tags:
+        - video
+      summary: Get videos of user with id
+      description: Get videos of user with id
+      operationId: video API2
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              
+  /video/add-to-history/{userid}:
+    post:
+      tags:
+        - video
+      summary: Add to History, Increase view
+      description: Registered 
+      operationId: video API3
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  
+  /video/{videoid}:
+    get:
+      tags:
+        - video
+      summary: Get video
+      description: Get Video with the id
+      operationId: video API4
       responses:
         default:
           description: successful operation
@@ -495,6 +631,7 @@ components:
           type: boolean
       xml:
         name: '##default'
+
   requestBodies:
     Register:
       description: Pet object that needs to be added to the store
