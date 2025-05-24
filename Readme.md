@@ -1,5 +1,12 @@
-## VIDEO-PLAYER BACKEND PROJECT
-### USING MERN STACK
+
+
+
+<h1>ClipSave Backend</h1>
+
+<i>
+<p>This repository is hosted on an AWS EC2 Instance, with a CI/CD pipeline done with Github Actions - <a href="https://clipsave.live">clipsave.live</a></p>
+<p>The frontend is hosted on Vercel on a different domain - <a href="https://video-player-frontend-delta.vercel.app/">video-player-frontend-delta.vercel.app</a>
+</i>
 
 <h3>Dependencies</h3> 
 
