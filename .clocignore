@@ -1,0 +1,12 @@
+*.json 
+package-lock.json
+yarn.lock
+.git/
+build/
+dist/
+coverage/
+.next/
+.parcel-cache/
+
+node_modules/
+public/

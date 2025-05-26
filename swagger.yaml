@@ -306,7 +306,7 @@ paths:
     post:
       tags:
         - user
-      summary: 
+      summary: Subscribe to user with id
       description: Subscribe to user with id
       operationId: createUser
       responses:
