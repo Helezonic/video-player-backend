@@ -18,14 +18,21 @@ jobs:
     - name: Save Docker Image to tarball
       run: docker save backend-clipsave-image:latest -o backend-clipsave-app.tar
 
-    - name: Transfer Image to EC2 and Deploy
+    - name: Transfer Docker Image Tarball
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST_DNS }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.UBUNTU_SSH_KEY }}
+        source: "backend-clipsave-app.tar"
+        target: "/tmp"
+
+    - name: Run image on EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST_DNS }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.UBUNTU_SSH_KEY }}
-        source: "backend-clipsave-app.tar" # This will SCP the tarball
-        target: "/tmp"            # To a temporary location on EC2
         script: |
           # Stop and remove old container
           sudo docker stop backend-clipsave-image || true
