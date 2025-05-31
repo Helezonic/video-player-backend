@@ -18,7 +18,7 @@ app.use(cors({
   credentials: true // To accept cookies & auth Header from client
 }
 ));
-
+console.log("CORS comes here" , process.env.CORS_ORIGIN)
 app.use(express.json({limit: "16kb"})); //To parse JSON data Content Type
 
 app.use(express.urlencoded({extended: true, limit: "16kb"})); //To parse urlencoded aka form data Content Type

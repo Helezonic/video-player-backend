@@ -35,15 +35,15 @@ jobs:
         key: ${{ secrets.UBUNTU_SSH_KEY }}
         script: |
           # Stop and remove old container
-          sudo docker stop backend-clipsave-image || true
-          sudo docker rm backend-clipsave-image || true
+          sudo docker stop backend-clipsave-container || true
+          sudo docker rm backend-clipsave-container || true
 
           # Load & clean up the new image from the tarball
           sudo docker load -i /tmp/backend-clipsave-app.tar
           rm /tmp/backend-clipsave-app.tar
 
           # Run the new container
-          sudo docker run -d --restart always backend-clipsave-image:latest
+          sudo docker run -d --env-file /home/ubuntu/app/.env --name backend-clipsave-container --restart always  backend-clipsave-image:latest
         
           #Or include the above command in myapp.service EXEC:
           #sudo systemctl daemon-reload
