@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build Docker Image
-      run: docker build -t backend-clipsave:latest .
+      run: docker build -t backend-clipsave-image:latest .
 
     - name: Save Docker Image to tarball
       run: docker save backend-clipsave-image:latest -o backend-clipsave-app.tar
