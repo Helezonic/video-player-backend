@@ -46,7 +46,7 @@ jobs:
           rm /tmp/backend-clipsave-app.tar
 
           # Run the new container
-          sudo docker run -d --env-file /home/ubuntu/app/.env --name backend-clipsave-container --restart always  backend-clipsave-image:latest
+          sudo docker run -d -p 4000:4000 --env-file /home/ubuntu/app/.env --name backend-clipsave-container --restart always  backend-clipsave-image:latest
         
           #Or include the above command in myapp.service EXEC:
           #sudo systemctl daemon-reload
