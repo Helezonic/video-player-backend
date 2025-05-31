@@ -6,13 +6,13 @@
 
 <i>
 <h3>Express Backend</h3>
-<p>This repository is hosted on an AWS EC2 Instance, with a CI/CD pipeline done with Github Actions - <a href="https://clipsave.live">clipsave.live</a></p>
+<p>This repository is containerized with Docker and hosted on an AWS EC2 Instance, with a CI/CD pipeline done with Github Actions - <a href="https://backend.clipsave.live">backend.clipsave.live</a></p>
 <h3>React Frontend</h3>
-<p>The frontend is hosted on Vercel on a different domain - <a href="https://video-player-frontend-delta.vercel.app/">video-player-frontend-delta.vercel.app</a>
+<p>The frontend is hosted live on Vercel on a different domain - <a href="https://clipsave.live/">clipsave.live</a>
 <h3>MongoDB Database</h3>
-<p>Database Modelling</p>
+<p>MongoDB Atlas Driver is being used for connecting database.</p>
 <h3>REST API</h3>
-<p>The API is documented using Open API specifications with Swagger API - <a href="https://clipsave.live/api-docs">API Documentation</a>
+<p>The API is documented using Open API specifications with Swagger API - <a href="https://backend.clipsave.live/api-docs">API Documentation</a>
 </i>
 
 <h3>Dependencies</h3> 
