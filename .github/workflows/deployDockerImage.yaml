@@ -1,4 +1,4 @@
-name: Deploy Dockerized App to AWS EC2 without registry hub
+name: Deploy Dockerized App to AWS EC2 without registry hub and custom daemon service for restarting
 
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
           rm /tmp/backend-clipsave-app.tar
 
           # Run the new container
-          sudo docker run -d -p 80:4000 --restart always backend-clipsave-image:latest
+          sudo docker run -d --restart always backend-clipsave-image:latest
         
           #Or include the above command in myapp.service EXEC:
           #sudo systemctl daemon-reload

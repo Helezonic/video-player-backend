@@ -1,4 +1,4 @@
-name: Deploy to AWS EC2
+name: Deploy to AWS EC2, with reverse proxy and daemon service.
 
 on:
   push:
