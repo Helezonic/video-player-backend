@@ -37,18 +37,48 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.UBUNTU_SSH_KEY }}
         script: |
+          script: |
+          echo "--- Starting Docker container deployment ---"
+
           # Stop and remove old container
+          echo "Attempting to stop existing container 'backend-clipsave-container'..."
           sudo docker stop backend-clipsave-container || true
+          echo "Attempting to remove old container 'backend-clipsave-container'..."
           sudo docker rm backend-clipsave-container || true
+          echo "Old container stopped and removed (if it existed)."
 
           # Load & clean up the new image from the tarball
+          echo "Loading new Docker image from /tmp/backend-clipsave-app.tar..."
           sudo docker load -i /tmp/backend-clipsave-app.tar
+          echo "Image loaded successfully."
+          echo "Cleaning up temporary image tarball..."
           rm /tmp/backend-clipsave-app.tar
+          echo "Tarball removed."
 
           # Run the new container
-          sudo docker run -d -p 4000:4000 --env-file /home/ubuntu/app/.env --name backend-clipsave-container --restart always  backend-clipsave-image:latest
+          echo "Running new container 'backend-clipsave-container' from backend-clipsave-image:latest..."
+          sudo docker run -d \
+            -p 4000:4000 \
+            --env-file /home/ubuntu/app/.env \
+            --name backend-clipsave-container \
+            --log-driver=awslogs \
+            --log-opt awslogs-region=eu-north-1 \
+            --log-opt awslogs-group=/docker/container-logs \
+            --log-opt awslogs-stream-prefix=my-app \
+            --restart always \
+            backend-clipsave-image:latest
+          echo "New container launched successfully."
+
+          # Clean up old, dangling images
+          echo "Cleaning up old Docker images to free up space..."
+          sudo docker image prune -f
+          echo "Docker image cleanup complete."
+
+          echo "--- Docker container deployment finished ---"
         
           #Or include the above command in myapp.service EXEC:
           #sudo systemctl daemon-reload
           #sudo systemctl restart myapp.service
           #sudo systemctl status myapp.service
+
+
