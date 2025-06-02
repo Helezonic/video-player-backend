@@ -3,17 +3,40 @@
 
 <h1>ClipSave Backend</h1>
 
+<h3>A Video Management Platform for users to upload videos, and view other user's videos.</h3>
+
+<h3>Users can</h3>
+
+- Create account, profile & cover images.
+- Login and logout with credentials.
+- Update account, profile & cover images.
+- Upload videos.
+- Play videos and get views.
+- Get their watch history.
+- Subscribe to other users.
 
 <i>
-<h3>Express Backend</h3>
-<p>This repository is containerized with Docker and hosted on an AWS EC2 Instance, with a CI/CD pipeline done with Github Actions - <a href="https://backend.clipsave.live">backend.clipsave.live</a></p>
-<h3>React Frontend</h3>
+<u><h3>Express Backend</h3></u>
+<p>This repository is containerized with <b>Docker</b> and hosted on an <b>AWS EC2</b> Instance, with a CI/CD pipeline done with <b>Github Actions</b> - <a href="https://backend.clipsave.live">backend.clipsave.live</a></p>
+<u><h3>React Frontend</h3></u>
 <p>The frontend is hosted live on Vercel on a different domain - <a href="https://clipsave.live/">clipsave.live</a>
-<h3>MongoDB Database</h3>
-<p>MongoDB Atlas Driver is being used for connecting database.</p>
-<h3>REST API</h3>
-<p>The API is documented using Open API specifications with Swagger API - <a href="https://backend.clipsave.live/api-docs">API Documentation</a>
+<u><h3>MongoDB Database</h3></u>
+<p><b>MongoDB</b> Atlas Driver is being used for connecting database.</p>
+<u><h3>REST API</h3></u>
+<p>The API is documented using Open API specifications with <b>Swagger API</b> - <a href="https://backend.clipsave.live/api-docs">API Documentation</a>
+
+
+<u><h3>AWS Cloudwatch Monitoring & Logging </h3></u>
+<div class="flex">
+    <img width="50%" alt="system logs" src="./public/Monitoring.png"/>
+    <p>Monitoring</p>
+    <img width="50%" alt="system logs" src="./public/SystemLogs.PNG"/>
+    <p>System Logs</p>
+    <img width="50%" alt="docker logs" src="./public/Dockerlogs.PNG"/>
+    <p>Docker Logs</p>
+</div>
 </i>
+
 
 <h3>Dependencies</h3> 
 
